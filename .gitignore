@@ -1,0 +1,5 @@
+# ignore all files in pycache folder
+__pycache__/
+
+# ignore generated shopping list
+Text/myshoppinglist.txt
