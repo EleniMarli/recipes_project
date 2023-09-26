@@ -1,3 +1,8 @@
+from pathlib import Path
+import sys
+sys.path.append(str(Path(__file__).parents[1]))
+# print(sys.path)
+
 # i have a collection of text files, each of them is a list of ingredients for a recipe.
 # my program collects the ingredients in a "shopping" list 
 # it compares for the same ingredients and adds them up 
@@ -44,7 +49,7 @@ print(test_list)
 
 #___________________________________________________________________________________________
 
-from ingredient_module import Ingredient  # importing the class Ingredients from the Ingredient.py file
+from main.ingredient_module import Ingredient  # importing the class Ingredients from the Ingredient.py file
 
 # let's make an Ingredients object:
 ingr_obj = Ingredient (test_list[0], test_list[1], test_list[2])
