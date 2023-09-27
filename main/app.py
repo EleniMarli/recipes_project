@@ -17,7 +17,7 @@ sys.path.append(str(Path(__file__).parents[1]))
 #.read(): reads text file as STRING          .read(4) --> 1 eg
 
 #better: (closes file automatically)
-with open("C:/VSCode/recipes_project/main/text/recipe1.txt","r") as file: # "r" --> reads text file as STRING
+with open("C:/VSCode/recipes_project/main/text/recipe1.txt") as file: # "r" --> reads text file as STRING
     file1 = file.read()
     print(file1)
     
@@ -35,19 +35,22 @@ shopping_list = open("C:/VSCode/recipes_project/main/text/myshoppinglist.txt", "
 shopping_list.write("Your shopping list:")
 #______________________________:_____________________________________________________________
 
+# NOT NEEDED ANYMORE?
 # Function that takes str and returns list with 1st element as float:
 
-def give_list_with_1st_as_float (str_local):
-    list_local = str_local.split(' ') #split string into list, identifying space as separator
-    list_local[0] = float(list_local[0])
-    return list_local
+# def give_list_with_1st_as_float (str_local):
+#     list_local = str_local.split(' ') #split string into list, identifying space as separator
+#     list_local[0] = float(list_local[0])
+#     return list_local
 
-test_str = "1 unit(s) egg(s)"
-test_list = give_list_with_1st_as_float(test_str)
+# test_str = "1 unit(s) egg(s)"
+# test_list = give_list_with_1st_as_float(test_str)
 
-print(test_list)
+# print(test_list)
 
 #___________________________________________________________________________________________
+
+#playing with the class Ingredient
 
 from main.ingredient_module import Ingredient  # importing the class Ingredients from the Ingredient.py file
 
