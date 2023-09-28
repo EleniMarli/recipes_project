@@ -3,4 +3,4 @@ __pycache__/
 .vscode/
 
 # ignore generated shopping list
-main/text/myshoppinglist.txt
+main/text/result/myshoppinglist.txt

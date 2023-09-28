@@ -1,4 +1,4 @@
-with open("C:/VSCode/recipes_project/main/text/recipe1.txt") as file: # "r" --> reads text file
+with open("C:/VSCode/recipes_project/main/text/recipes/recipe1.txt") as file: # "r" --> reads text file
 
     file1 = file.read()  # --> STRING, looks exactly like file reads
 
@@ -27,14 +27,6 @@ with open("C:/VSCode/recipes_project/main/text/recipe1.txt") as file: # "r" --> 
     print(list_of_words)   #gives a list of words with correct floats --> [1.0, 'unit(s)', 'egg(s)', 250.0, 'gr', 'flour']
 
     length = len(list_of_words)
-
-    # match this list to class Ingredient
-
-    # from Ingredient import Ingredient
-
-    # empty_ingr_list = []
-
-    # for i in range(0,length):
         
 
 

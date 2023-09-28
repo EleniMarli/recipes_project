@@ -1,4 +1,4 @@
-with open("C:/VSCode/recipes_project/main/text/recipe1.txt") as file: # "r" --> reads text file
+with open("C:/VSCode/recipes_project/main/text/recipes/recipe1.txt") as file: # "r" --> reads text file
 
     file1 = file.read()  # --> STRING, looks exactly like file reads
     print(file1)
