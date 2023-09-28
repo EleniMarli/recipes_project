@@ -1,4 +1,6 @@
-class Recipe:   # a collection of objects of the Ingredient class, each text file will create 1 Recipe object
+# A collection of objects of the Ingredient class, each text file will create 1 object in the Recipe class
+
+class Recipe:
     def __init__ (self, name_local : str, list_local : list):   # these are just comments
         self.name = name_local
         self.list_of_ingredients = list_local

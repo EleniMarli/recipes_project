@@ -39,12 +39,14 @@ shopping_list.write("Your shopping list:")
 
 from main.ingredient_module import Ingredient  # importing the class Ingredients from the Ingredient.py file
 
+test_list = [1.0, "unit(s)", "egg(s)"]
+             
 # let's make an Ingredients object:
 ingr_obj = Ingredient (test_list[0], test_list[1], test_list[2])
 
-print(ingr_obj.ammount)
+print(ingr_obj.amount)
 print(ingr_obj.metric_unit)
 print(ingr_obj.name)
 
-shopping_list.write(f"\n{ingr_obj.ammount} {ingr_obj.metric_unit} of {ingr_obj.name}")
+shopping_list.write(f"\n{ingr_obj.amount} {ingr_obj.metric_unit} of {ingr_obj.name}")
 #____________________________________________________________________________________________
