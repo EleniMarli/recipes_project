@@ -1,5 +1,9 @@
-from main.app import give_list_with_1st_as_float
+import main.app # runs app script
 
-def test_function():
-    result = give_list_with_1st_as_float("1 unit(s) egg(s)")
-    assert result == [1.0, 'unit(s)', 'egg(s)']
+def test_shopping_list_is_created_correctly():
+    with open(f"C:/VSCode/recipes_project/main/text/result/myshoppinglist.txt") as file:
+        shopping_list = file.read()
+        first_line = shopping_list.split('\n')[0]
+        assert first_line == "Your shopping list:"
+        assert "flour" in shopping_list
+        assert "sugar" in shopping_list
