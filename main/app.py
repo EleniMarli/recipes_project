@@ -1,52 +1,74 @@
 from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).parents[1]))
-# print(sys.path)
 
-# i have a collection of text files, each of them is a list of ingredients for a recipe.
-# my program collects the ingredients in a "shopping" list 
-# it compares for the same ingredients and adds them up 
+import os
+folder_path = 'C:/VSCode/recipes_project/main/text/recipes'
 
-# recipe1 content:    1 egg(s)                  recipe2 content:    3 egg(s)
-#                     250 gr flour                                  50 gr flour
-#                     50 gr sugar                                   150 gr sugar
-#__________________________________________________________________________________________
-# HOW TO ACCESS PRE-EXISTING TEXT FILES:
-# file1 = open("C:/VSCode/recipes_project/main/text/recipes/recipe1.txt")  #reference correct path: directory and name of file
-# file.close()        important to close file at the end
-#.read(): reads text file as STRING          .read(4) --> 1 eg
+from main.ingredient_module import Ingredient
+from main.recipe_module import Recipe
+from main.shopping_list_module import Shopping_list
 
-#better: (closes file automatically)
-with open("C:/VSCode/recipes_project/main/text/recipes/recipe1.txt") as file: # "r" --> reads text file as STRING
-    file1 = file.read()
-    print(file1)
-    
-#___________________________________________________________________________________________
+all_filenames_as_list_of_str = os.listdir(folder_path) # list of str: list of all files names in the folder
 
-# HOW TO CREATE AN EMPTY TEXT FILE:
-# shopping_list = open("C:/VSCode/recipes_project/main/text/result/myshoppinglist.txt", "x")   
-# creating a text file with the command function "x", if file with this name exists --> Error
+recipe_objects_list = [] # I will end up with a list of all the Recipe objects
+
+for file_name in all_filenames_as_list_of_str:
+    list_of_ingr_objects_for_single_file = []
+    with open(f"C:/VSCode/recipes_project/main/text/recipes/{file_name}") as file:
+        file_lines = file.read()
+        file_list_of_str = file_lines.split('\n')  #list of strings
+        for str_Ingr in file_list_of_str:
+            object_Ingr = Ingredient.from_str_to_ingredient(str_Ingr) # I make Ingredient objects here
+            list_of_ingr_objects_for_single_file += [object_Ingr]
+        recipe_objects_list += [Recipe(f"{file_name}", list_of_ingr_objects_for_single_file)]
+
+separated_list_of_ingr_objects_for_all_files = []  # [[ingra1,ingra2,ing3], [ingrb1,ingrb2,ingrb3], [ingrc1,ingrc2]]
+for recipe in recipe_objects_list:
+    separated_list_of_ingr_objects_for_all_files += [recipe.list_of_ingredients]
+
+unified_list_of_ingr_objects_for_all_files = []  # [ingra1,ingra2,ing3,ingrb1,ingrb2,ingrb3, ingrc1,ingrc2]
+for sublist in separated_list_of_ingr_objects_for_all_files:
+    for item in sublist:
+        unified_list_of_ingr_objects_for_all_files.append(item)
+
+# I end up with a unified list of ingredients
+
+sl_before_filtering = Shopping_list (unified_list_of_ingr_objects_for_all_files)   # object of class Shopping list
+
+# I need to filter for repetition of ingr within the unified_list_of_ingr_cl_for_all_files
+
+names_list_pre_filter = list (map (lambda x : x.name , sl_before_filtering.list_of_all_ingredients ))   # [eggs,flour,salt,eggs,flour]
+
+set_unique_names = set(names_list_pre_filter) # {eggs,flour,salt}
+
+list_of_sublists = []
+
+for unique_name in set_unique_names:
+    extra = list (filter ( lambda ingr: ingr.name == unique_name , sl_before_filtering.list_of_all_ingredients ))
+    list_of_sublists.append(extra)   # with append and not concatenation, i make sublists of ingr within the empty_list!
+
+
+sl_final = []  # here i make the final shopping list, consisting of Ingredient objects
+
+for sub in list_of_sublists:  # this works, only if I have the same metric units 
+    sum = 0
+    for ingr in sub:
+        sum += ingr.amount
+    object = Ingredient (sum, ingr.metric_unit, ingr.name)
+    sl_final += [object]
+
+
+# write result in the shopping list text file
 
 shopping_list = open("C:/VSCode/recipes_project/main/text/result/myshoppinglist.txt", "w")
 # This "w" command creates a new file, but unlike the "x", it overwrites any existing file found with the same file name.
-#___________________________________________________________________________________________
 
 #HOW TO WRITE SOMETHING IN THE NEW TEXT FILE:
 shopping_list.write("Your shopping list:")
-#______________________________:_____________________________________________________________
+for ingr in sl_final:
+    shopping_list.write(f"\n{ingr.amount} {ingr.metric_unit} {ingr.name} ")
 
-#playing with the class Ingredient
-
-from main.ingredient_module import Ingredient  # importing the class Ingredients from the Ingredient.py file
-
-test_list = [1.0, "unit(s)", "egg(s)"]
-             
-# let's make an Ingredients object:
-ingr_obj = Ingredient (test_list[0], test_list[1], test_list[2])
-
-print(ingr_obj.amount)
-print(ingr_obj.metric_unit)
-print(ingr_obj.name)
-
-shopping_list.write(f"\n{ingr_obj.amount} {ingr_obj.metric_unit} of {ingr_obj.name}")
-#____________________________________________________________________________________________
+# convert metric units?
+# kg,kilo,kilos,kilogram, kilograms --> gr
+# recognise gram --> gr

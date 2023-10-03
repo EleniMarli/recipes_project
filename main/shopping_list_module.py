@@ -1,4 +1,4 @@
-# A collection of objects of the Ingredient class, each text file will create 1 object in the Recipe class
+# A list of objects of the Ingredient class
 
 class Shopping_list:
     def __init__ (self, list_local : list):
