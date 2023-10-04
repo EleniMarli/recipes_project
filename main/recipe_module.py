@@ -8,9 +8,9 @@ class Recipe:
         self.list_of_ingredients = list_local
 
     @staticmethod
-    def from_file (file_name_local):
+    def from_file (path_local, file_name_local):
         list_of_ingr_objects_for_single_file = []
-        with open(f"C:/VSCode/recipes_project/main/text/recipes/{file_name_local}") as file:
+        with open(path_local + '/' + file_name_local) as file:
             file_lines = file.read()
             file_list_of_str = file_lines.split('\n')  #list of strings
             for str_Ingr in file_list_of_str:

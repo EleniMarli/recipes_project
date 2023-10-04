@@ -4,3 +4,4 @@ __pycache__/
 
 # ignore generated shopping list
 main/text/result/myshoppinglist.txt
+test/text/result/myshoppinglist.txt

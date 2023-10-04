@@ -22,12 +22,12 @@ class Shopping_list:
         return Shopping_list (unified_list_of_ingr_objects_for_all_files)
 
 
-    def filter_out_repetitions (self):
+    def combine_repetitions (self):
         names_list_pre_filter = list (map (lambda x : x.name , self.list_of_all_ingredients ))   # [eggs,flour,salt,eggs,flour]
-        set_unique_names = set(names_list_pre_filter) # {eggs,flour,salt}
+        alphabetical_list_unique_names = sorted(list(set(names_list_pre_filter)))
 
         list_of_sublists = []
-        for unique_name in set_unique_names:
+        for unique_name in alphabetical_list_unique_names:
             extra = list (filter ( lambda ingr: ingr.name == unique_name , self.list_of_all_ingredients ))
             list_of_sublists.append(extra)   # with append and not concatenation, i make sublists of ingr within the empty_list!
 
