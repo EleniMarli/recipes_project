@@ -2,6 +2,9 @@
 __pycache__/
 .vscode/
 
+# ignore coverage file
+.coverage
+
 # ignore generated shopping list
 main/text/result/myshoppinglist.txt
 test/text/result/myshoppinglist.txt

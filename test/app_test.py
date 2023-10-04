@@ -1,6 +1,11 @@
-import main.app # runs app script
+import pytest
 
+@pytest.mark.integration
 def test_shopping_list_is_created_correctly():
+    # when
+    import main.app # runs app script
+
+    # then
     with open(f"C:/VSCode/recipes_project/main/text/result/myshoppinglist.txt") as file:
         shopping_list = file.read()
         first_line = shopping_list.split('\n')[0]
