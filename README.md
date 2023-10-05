@@ -4,14 +4,14 @@
 
 * Each ingredient in your ```*.txt``` file(s) should occupy one line. Currently the format you should use for each ingredient is:
 
-        amount - metric unit - name of ingredient
+        <name of ingredient>, <amount> <metric unit>
 
-        i.e. 1 unit(s) egg(s)
+        i.e. egg(s), 1 unit(s)
 
 * Use the same metric unit(s) for ingredients with the same name:
 
-        100 gr flour
-        350 gr flour
+        flour, 100 gr
+        flour, 350 gr
 
 
 * Then execute on the command line:

@@ -1,3 +1,3 @@
-3 unit(s) egg(s)
-50 gr flour
-150 gr sugar
+egg(s), 3 unit(s)
+flour, 50 gr
+sugar, 150 gr

@@ -6,10 +6,11 @@ class Ingredient:  # defining the class
 
     @staticmethod # factory method = method that creates an object
     def from_str_to_ingredient (str_local):
-        list_local = str_local.split(' ') # turn 1 str to list
-        amount = float(list_local[0])  # use indeces to match each list element to its according object property
-        metric_unit = list_local[1]
-        name = list_local[2]
+        list_local = str_local.split(', ') # turn 1 str to list
+        name = list_local[0]
+        rest = list_local[1].split(' ')
+        amount = float(rest[0])
+        metric_unit = rest[1]
         return Ingredient (amount, metric_unit, name)
     
     # getter = method that gives info about the object

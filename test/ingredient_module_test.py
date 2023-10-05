@@ -2,7 +2,7 @@ from main.ingredient_module import Ingredient
 
 def test_ingredient_can_be_created_from_string():
     # when
-    result = Ingredient.from_str_to_ingredient("1 unit(s) egg(s)")
+    result = Ingredient.from_str_to_ingredient("egg(s), 1 unit(s)")
 
     # then
     assert isinstance(result, Ingredient)

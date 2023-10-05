@@ -45,7 +45,7 @@ class Shopping_list:
         shop_list = open(path_local + "/myshoppinglist.txt", "w") # "w" command creates a new file, but unlike the "x", it overwrites any existing file found with the same file name.
         shop_list.write("Your shopping list:")
         for ingr in self.list_of_all_ingredients:
-            shop_list.write(f"\n{ingr.amount} {ingr.metric_unit} {ingr.name} ")
+            shop_list.write(f"\n{ingr.name}, {ingr.amount} {ingr.metric_unit} ")
 
 
     def print_object (self):

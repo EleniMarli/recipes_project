@@ -1,9 +1,10 @@
 import pytest
+from main.main_commands import execute_app
 
 @pytest.mark.integration
 def test_shopping_list_is_created_correctly():
     # when
-    import main.app # runs app script
+    execute_app()
 
     # then
     with open(f"C:/VSCode/recipes_project/main/text/result/myshoppinglist.txt") as file:

@@ -1,2 +1,4 @@
-1 unit(s) egg(s)
-250 gr flour
+egg(s), 1 unit(s)
+flour, 250 gr
+garlic, 34 clove(s)
+tomato-juice, 7 tsp
