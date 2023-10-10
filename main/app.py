@@ -18,6 +18,6 @@ while True:
         break
     elif user_input == 'help':
        subprocess.run(['notepad.exe', 'C:/VSCode/recipes_project/README.md'], check=True)
-       print('Hopefully that was helpful. Do you want to execute the app? (yes/no/help)')
+       print('\nHopefully that was helpful. Do you want to execute the app? (yes/no/help)')
     else:
         print (f"The command {user_input} is not valid. Try again.")
