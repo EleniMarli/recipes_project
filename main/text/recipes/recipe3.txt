@@ -1,4 +1,0 @@
-egg(s), 1 unit(s)
-flour, 50 gr
-sugar, 150 gr
-salt, 3 tsp

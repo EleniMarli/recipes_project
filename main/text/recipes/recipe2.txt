@@ -1,3 +1,0 @@
-egg(s), 3 unit(s)
-flour, 50 gr
-sugar, 150 gr

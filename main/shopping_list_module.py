@@ -41,6 +41,7 @@ class Shopping_list:
 
         self.list_of_all_ingredients = sl_without_repetitions
 
+
     def export_to_text_file (self, path_local):
         shop_list = open(path_local + "/myshoppinglist.txt", "w") # "w" command creates a new file, but unlike the "x", it overwrites any existing file found with the same file name.
         shop_list.write("Your shopping list:")
