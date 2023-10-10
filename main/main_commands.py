@@ -37,6 +37,20 @@ def choose_files (all_filenames_as_list_of_str_local):
 
     return called_filenames_list_local
 
+def from_filenames_to_shopping_list (called_filenames_list_local, recipes_path_local, result_path_local):
+    recipe_objects_list = [] # I will end up with a list of all the Recipe objects
+    for file_name in called_filenames_list_local:
+        recipe_objects_list += [Recipe.from_file(recipes_path_local, file_name)]
+
+    shopping_list = Shopping_list.from_list_of_recipes(recipe_objects_list)
+
+    shopping_list.combine_repetitions()
+
+    shopping_list.export_to_text_file(result_path_local)
+
+    print("\nApplication has run successfully, the shopping list can be found in the ./main/text/result directory")
+
+
 
 def execute_app():
     text_folder_path = 'C:/VSCode/recipes_project/main/text'
@@ -54,18 +68,7 @@ def execute_app():
 
         user_input = input()
         if user_input == 'yes':
-            recipe_objects_list = [] # I will end up with a list of all the Recipe objects
-            for file_name in called_filenames_list:
-                recipe_objects_list += [Recipe.from_file(recipes_path, file_name)]
-
-            shopping_list = Shopping_list.from_list_of_recipes(recipe_objects_list)
-
-            shopping_list.combine_repetitions()
-
-            shopping_list.export_to_text_file(result_path)
-
-            print("\nApplication has run successfully, the shopping list can be found in the ./main/text/result directory")
-
+            from_filenames_to_shopping_list (called_filenames_list, recipes_path, result_path)
             flag = False
 
 
