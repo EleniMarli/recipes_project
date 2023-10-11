@@ -3,7 +3,6 @@
 import os
 from main.ingredient_module import Ingredient
 
-
 class Shopping_list:
     def __init__ (self, list_local : list):
         self.list_of_all_ingredients = list_local

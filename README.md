@@ -22,6 +22,14 @@
 * Now you have your shopping list in the ```main/text/result``` directory.
 
 ## Execute using the graphical user interface
+* Install the necessary dependencies by writing on the command line:
+
+        pip install PySimpleGUI
+
+* If your Python distribution does not include Tkinter, you might have to install it, i.e. for Linux: 
+
+        sudo apt install python3-tk -y
+
 * Execute on the command line:
         
         python -u main/app_gui.py
