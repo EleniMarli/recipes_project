@@ -8,18 +8,22 @@ from main.main_commands import from_filenames_to_shopping_list
 
 import random
 
-text_folder_path = 'C:/VSCode/recipes_project/main/text'
-recipes_path = text_folder_path + '/recipes'
-result_path = text_folder_path + '/result'
-all_filenames_as_list_of_str = os.listdir(recipes_path)
+from main.paths_config import recipes_full_path, result_full_path
 
-sg.theme('DarkAmber')   # Add a touch of color
+all_filenames_as_list_of_str = os.listdir(recipes_full_path)
+
+themes = sg.list_of_look_and_feel_values()
+chosen_theme = random.choice(themes)
+print('The theme today is ' + chosen_theme)
+
+sg.theme(chosen_theme)  # (previously 'DarkAmber')
+# sg.theme('DarkAmber')   # Add a touch of color
 # All the stuff inside your window.
-layout = [  [sg.Text('Choose recipes:')],
+layout = [  [sg.Text('Choose recipes:', font = ('default', 11, 'bold'))],
             [sg.Listbox( values= all_filenames_as_list_of_str, size=(30, 6), select_mode = sg.LISTBOX_SELECT_MODE_MULTIPLE )],
             [sg.Button('OK')],
-            [sg.Text('Your shopping list:')],
-            [sg.Multiline('(Select some recipes and click OK)', auto_refresh = True, size=(45,20))],
+            [sg.Text('Your shopping list:', font = ('default', 11, 'bold'))],
+            [sg.Multiline('Select some recipes and click OK', font = ('default', 10, 'italic'), size=(45,20))],
             [sg.Button('Close')] ]
 
 # Create the Window
@@ -33,12 +37,12 @@ while True:
 
     selected_filenames =  values[0]
 
-    from_filenames_to_shopping_list (selected_filenames, recipes_path, result_path)
+    from_filenames_to_shopping_list (selected_filenames, recipes_full_path, result_full_path)
 
-    with open(f"C:/VSCode/recipes_project/main/text/result/myshoppinglist.txt") as file:
+    with open (os.path.join(result_full_path, "myshoppinglist.txt")) as file:  #?????
         file.readline()
         shopping_list = file.read()
 
-    window[1].update(shopping_list)
+    window[1].update(shopping_list, font = ('default', 10, 'normal'))
     
 window.close()

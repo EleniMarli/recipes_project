@@ -1,5 +1,6 @@
 # A list of objects of the Ingredient class
 
+import os
 from main.ingredient_module import Ingredient
 
 
@@ -43,7 +44,7 @@ class Shopping_list:
 
 
     def export_to_text_file (self, path_local):
-        shop_list = open(path_local + "/myshoppinglist.txt", "w") # "w" command creates a new file, but unlike the "x", it overwrites any existing file found with the same file name.
+        shop_list = open(os.path.join(path_local, "myshoppinglist.txt"), "w") # "w" command creates a new file, but unlike the "x", it overwrites any existing file found with the same file name.
         shop_list.write("Your shopping list:")
         for ingr in self.list_of_all_ingredients:
             shop_list.write(f"\n{ingr.name}, {ingr.amount} {ingr.metric_unit} ")

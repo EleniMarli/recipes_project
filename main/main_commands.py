@@ -5,6 +5,8 @@ from main.shopping_list_module import Shopping_list
 
 import subprocess
 
+from main.paths_config import recipes_full_path, result_full_path, readme_full_path
+
 def choose_files (all_filenames_as_list_of_str_local):
  
     while True:
@@ -53,11 +55,8 @@ def from_filenames_to_shopping_list (called_filenames_list_local, recipes_path_l
 
 
 def execute_app():
-    text_folder_path = 'C:/VSCode/recipes_project/main/text'
-    recipes_path = text_folder_path + '/recipes'
-    result_path = text_folder_path + '/result'
 
-    all_filenames_as_list_of_str = os.listdir(recipes_path) # list of str: list of all files names in the folder
+    all_filenames_as_list_of_str = os.listdir(recipes_full_path) # list of str: list of all files names in the folder
 
     flag = True
 
@@ -68,7 +67,7 @@ def execute_app():
 
         user_input = input()
         if user_input == 'yes':
-            from_filenames_to_shopping_list (called_filenames_list, recipes_path, result_path)
+            from_filenames_to_shopping_list (called_filenames_list, recipes_full_path, result_full_path)
             flag = False
 
 
@@ -77,7 +76,7 @@ def execute_app():
 
 
         elif user_input == 'help':
-            subprocess.run(['notepad.exe', 'C:/VSCode/recipes_project/README.md'], check=True)
+            subprocess.run(['notepad.exe', readme_full_path], check=True)
             print('\nHopefully that was helpful.')
 
 

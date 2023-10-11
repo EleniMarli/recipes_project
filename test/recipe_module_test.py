@@ -1,9 +1,10 @@
 from main.recipe_module import Recipe
 from main.ingredient_module import Ingredient
+from test.paths_config_for_tests import recipes_full_path
 
 def test_recipe_can_be_created_from_file_name():
     # when
-    result = Recipe.from_file('C:/VSCode/recipes_project/test/text/recipes', 'recipe1.txt')
+    result = Recipe.from_file(recipes_full_path, 'recipe1.txt')
     
     # then
     assert isinstance (result, Recipe)

@@ -1,6 +1,7 @@
 from main.recipe_module import Recipe
 from main.shopping_list_module import Shopping_list
 from main.ingredient_module import Ingredient
+from test.paths_config_for_tests import result_full_path, shopping_list_full_path
 
 def test_shopping_list_can_be_created_from_list_of_recipes():
     # given
@@ -40,10 +41,10 @@ def test_export_to_text_file_from_path ():
         ])
     
     # when
-    shop_list1.export_to_text_file('C:/VSCode/recipes_project/test/text/result')
+    shop_list1.export_to_text_file(result_full_path)
     
     # then
-    with open(f"C:/VSCode/recipes_project/test/text/result/myshoppinglist.txt") as file:
+    with open(shopping_list_full_path) as file:
         shopping_list = file.read()
         first_line = shopping_list.split('\n')[0]
         assert first_line == "Your shopping list:"

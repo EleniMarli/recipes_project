@@ -1,6 +1,6 @@
 # A way to create your shopping list
 ## How does it work?
-* After downloading the project, save each list of ingredients for a recipe as a ```*.txt``` file in the ```main/text/recipes``` directory.
+* Save each list of ingredients for a recipe as a ```*.txt``` file in the ```main/text/recipes``` directory.
 
 * Each ingredient in your ```*.txt``` file(s) should occupy one line. Currently the format you should use for each ingredient is:
 
@@ -13,10 +13,17 @@
         flour, 100 gr
         flour, 350 gr
 
-
-* Then execute on the command line:
+## Execution only on command line
+* Execute on the command line:
         
         python -u main/app.py
 
 
 * Now you have your shopping list in the ```main/text/result``` directory.
+
+## Execute using the graphical user interface
+* Execute on the command line:
+        
+        python -u main/app_gui.py
+
+* Now you have your shopping list in the ```main/text/result``` directory and it appears also on the graphical user interface after clicking ```OK```.
