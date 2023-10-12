@@ -1,0 +1,5 @@
+How to use the graphical user interface:
+- Click on the recipes whose ingredients you want to include in your shopping list
+- Click OK
+- Your shopping list will get generated below
+- You can always edit your shopping list
