@@ -1,6 +1,8 @@
 # A way to create your shopping list
 ## How does it work?
-* Save each list of ingredients for a recipe as a ```*.txt``` file in the ```main/text/recipes``` directory.
+* Save each recipe as a ```*.txt``` file in the ```main/text/recipes``` directory.
+
+* In the ```main/text/recipe_example``` read the ```recipe_example.txt``` file to understand the format you have to follow.
 
 * Each ingredient in your ```*.txt``` file(s) should occupy one line. Currently the format you should use for each ingredient is:
 
