@@ -13,8 +13,10 @@ class Recipe:
         list_of_ingr_objects_for_single_file = []
         with open(os.path.join(path_local, file_name_local)) as file:
             file_lines = file.read()
-            file_list_of_str = file_lines.split('\n')  #list of strings
-            for str_Ingr in file_list_of_str:
+            file_list_of_str = file_lines.split('\n')  #list of strings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            index_of_first_ingr = file_list_of_str.index('Ingredients:') + 1
+            list_only_ingredients = file_list_of_str[index_of_first_ingr:]  #!!!!!!
+            for str_Ingr in list_only_ingredients:
                 object_Ingr = Ingredient.from_str_to_ingredient(str_Ingr) # I make Ingredient objects here
                 list_of_ingr_objects_for_single_file += [object_Ingr]
             return Recipe(f"{file_name_local}", list_of_ingr_objects_for_single_file)
