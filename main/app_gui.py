@@ -11,6 +11,10 @@ import random
 from main.paths_config import recipes_full_path, result_full_path, help_text_full_path
 
 all_filenames_as_list_of_str = os.listdir(recipes_full_path)
+filenames = []
+for name in all_filenames_as_list_of_str:
+    first = name.split('.')[0]
+    filenames += [first]
 
 # playing with the themes:
 themes = sg.list_of_look_and_feel_values()
@@ -23,7 +27,7 @@ sg.theme(chosen_theme)  # (previously 'DarkAmber')
 
 
 layout1 = [  [sg.Text('Choose recipes:', font = ('default', 11, 'bold'))],
-            [sg.Listbox( values= all_filenames_as_list_of_str, size=(30, 6), select_mode = sg.LISTBOX_SELECT_MODE_MULTIPLE ), sg.Button ('OK')],
+            [sg.Listbox(values = filenames, size=(30, 6), select_mode = sg.LISTBOX_SELECT_MODE_MULTIPLE ), sg.Button ('OK')], #!!
             [sg.Text('Your shopping list:', font = ('default', 11, 'bold'))],
             [sg.Multiline('Select some recipes and click OK', font = ('default', 10, 'italic'), size=(45,20))],
             [sg.Button('Help'), sg.Button('Close')]]
@@ -57,7 +61,12 @@ while True:
 
     selected_filenames =  values1[0]
 
-    from_filenames_to_shopping_list (selected_filenames, recipes_full_path, result_full_path)
+    selected_filenames_txt = []
+    for name in selected_filenames:
+        first = name + '.txt'
+        selected_filenames_txt += [first]
+
+    from_filenames_to_shopping_list (selected_filenames_txt, recipes_full_path, result_full_path)
 
     if event1 == 'Help':
         help_window()            
