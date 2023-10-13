@@ -4,13 +4,11 @@ sys.path.append(str(Path(__file__).parents[1]))
 
 import PySimpleGUI as sg
 import os
-from main.main_commands import from_filenames_to_temporary_shopping_list
-
 import random
 
-from main.paths_config import recipes_full_path, result_full_path, help_text_full_path
-
+from main.main_commands import from_filenames_to_temporary_shopping_list
 from main.txt_files_config import remove_txt_from_filenames, add_txt_to_filenames
+from main.paths_config import recipes_full_path, result_full_path, help_text_full_path
 
 
 # playing with the themes:
@@ -24,7 +22,6 @@ sg.theme(chosen_theme)  # (previously 'DarkAmber')
 all_filenames_as_list_of_str = os.listdir(recipes_full_path)
 filenames = remove_txt_from_filenames(all_filenames_as_list_of_str)
 
-
 layout1 = [  [sg.Text('Choose recipes:', font = ('default', 11, 'bold'))],
             [sg.Listbox(values = filenames, size=(30, 6), select_mode = sg.LISTBOX_SELECT_MODE_MULTIPLE ), sg.Button ('OK')], #!!
             [sg.Text('Your shopping list:', font = ('default', 11, 'bold'))],
@@ -32,7 +29,7 @@ layout1 = [  [sg.Text('Choose recipes:', font = ('default', 11, 'bold'))],
             [sg.Button('Help'), sg.Button('Close')]]
 
 
-
+# Help window function
 def help_window ():
     with open(help_text_full_path, 'r') as file:
 

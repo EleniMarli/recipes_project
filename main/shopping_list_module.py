@@ -1,6 +1,7 @@
 # A list of objects of the Ingredient class
 
 import os
+
 from main.ingredient_module import Ingredient
 from main.paths_config import permanent_result_folder_full_path
 

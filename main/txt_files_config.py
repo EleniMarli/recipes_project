@@ -11,3 +11,10 @@ def add_txt_to_filenames (list_filenames_without_txt):
         first = name + '.txt'
         filenames_txt += [first]
     return filenames_txt
+
+def add_dot_to_filenames (list_filenames_local):
+    filenames_dot = []
+    for name in list_filenames_local:
+        first = '• ' + name
+        filenames_dot += [first]
+    return filenames_dot

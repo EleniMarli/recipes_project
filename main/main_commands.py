@@ -1,11 +1,10 @@
 import os
+import subprocess
 
 from main.recipe_module import Recipe
 from main.shopping_list_module import Shopping_list
-
-import subprocess
-
 from main.paths_config import recipes_full_path, result_full_path, readme_full_path
+from main.txt_files_config import remove_txt_from_filenames, add_dot_to_filenames
 
 def choose_files (all_filenames_as_list_of_str_local):
  
@@ -16,7 +15,7 @@ def choose_files (all_filenames_as_list_of_str_local):
         counter = 1
         for file_name in all_filenames_as_list_of_str_local:
             dictionary[counter] = file_name
-            print(f"{counter} : {file_name}" )
+            print(f'{counter} :' + f' {file_name.replace(".txt","")}' )
             counter += 1
 
         print("\nPlease choose the recipes to be considered by typing the corresponding digit. Separate the digits using one space." )
@@ -35,7 +34,8 @@ def choose_files (all_filenames_as_list_of_str_local):
             break
 
     print("\nThe selected recipes are the following:")
-    print(*called_filenames_list_local, sep='\n')
+    remove_txt_from_filenames(called_filenames_list_local)
+    print(*add_dot_to_filenames(remove_txt_from_filenames(called_filenames_list_local)), sep='\n')
 
     return called_filenames_list_local
 
