@@ -4,17 +4,14 @@ sys.path.append(str(Path(__file__).parents[1]))
 
 import PySimpleGUI as sg
 import os
-from main.main_commands import from_filenames_to_shopping_list
+from main.main_commands import from_filenames_to_temporary_shopping_list
 
 import random
 
 from main.paths_config import recipes_full_path, result_full_path, help_text_full_path
 
-all_filenames_as_list_of_str = os.listdir(recipes_full_path)
-filenames = []
-for name in all_filenames_as_list_of_str:
-    first = name.split('.')[0]
-    filenames += [first]
+from main.txt_files_config import remove_txt_from_filenames, add_txt_to_filenames
+
 
 # playing with the themes:
 themes = sg.list_of_look_and_feel_values()
@@ -24,6 +21,8 @@ print('The theme today is ' + chosen_theme)
 sg.theme(chosen_theme)  # (previously 'DarkAmber')
 # sg.theme('DarkAmber')   # Add a touch of color
 
+all_filenames_as_list_of_str = os.listdir(recipes_full_path)
+filenames = remove_txt_from_filenames(all_filenames_as_list_of_str)
 
 
 layout1 = [  [sg.Text('Choose recipes:', font = ('default', 11, 'bold'))],
@@ -61,17 +60,14 @@ while True:
 
     selected_filenames =  values1[0]
 
-    selected_filenames_txt = []
-    for name in selected_filenames:
-        first = name + '.txt'
-        selected_filenames_txt += [first]
+    selected_filenames_txt = add_txt_to_filenames(selected_filenames)
 
-    from_filenames_to_shopping_list (selected_filenames_txt, recipes_full_path, result_full_path)
+    from_filenames_to_temporary_shopping_list (selected_filenames_txt, recipes_full_path, result_full_path)
 
     if event1 == 'Help':
         help_window()            
 
-    with open (os.path.join(result_full_path, "myshoppinglist.txt")) as file: 
+    with open (os.path.join(result_full_path, "temporary", "myshoppinglist.txt")) as file: 
         file.readline()
         shopping_list = file.read()
 

@@ -1,5 +1,5 @@
 import pytest
-from main.main_commands import from_filenames_to_shopping_list
+from main.main_commands import from_filenames_to_temporary_shopping_list
 from test.paths_config_for_tests import shopping_list_full_path, recipes_full_path, result_full_path
 
 
@@ -9,7 +9,7 @@ def test_shopping_list_is_created_correctly():
     filenames_as_list_of_str = ['recipe1.txt', 'recipe2.txt']
 
     # when
-    from_filenames_to_shopping_list(filenames_as_list_of_str, recipes_full_path, result_full_path)
+    from_filenames_to_temporary_shopping_list(filenames_as_list_of_str, recipes_full_path, result_full_path)
 
     # then
     with open(shopping_list_full_path) as file:

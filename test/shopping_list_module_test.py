@@ -41,7 +41,7 @@ def test_export_to_text_file_from_path ():
         ])
     
     # when
-    shop_list1.export_to_text_file(result_full_path)
+    shop_list1.export_to_temporary_text_file(result_full_path)
     
     # then
     with open(shopping_list_full_path) as file:
