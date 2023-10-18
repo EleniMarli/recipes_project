@@ -6,6 +6,8 @@ from main.shopping_list_module import Shopping_list
 from main.paths_config import recipes_full_path, result_full_path, readme_full_path
 from main.txt_files_config import remove_txt_from_filenames, add_dot_to_filenames
 
+
+
 def choose_files (all_filenames_as_list_of_str_local):
  
     while True:
@@ -38,6 +40,8 @@ def choose_files (all_filenames_as_list_of_str_local):
     print(*add_dot_to_filenames(remove_txt_from_filenames(called_filenames_list_local)), sep='\n')
 
     return called_filenames_list_local
+
+
 
 def from_filenames_to_temporary_shopping_list (called_filenames_list_local, recipes_path_local, result_path_local):
     recipe_objects_list = [] # I will end up with a list of all the Recipe objects
@@ -78,6 +82,7 @@ def execute_app():
 
                 if user_input2 == 'yes':
                     list_for_use.export_to_permanent_text_file()
+                    print('\nYour saved shopping list can be found in ./main/text/result/permanent directory')
                     flag = False
                     break
                 

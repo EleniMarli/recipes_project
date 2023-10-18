@@ -52,7 +52,7 @@ class Shopping_list:
 
 
     def export_to_permanent_text_file (self):
-        print('How do you want to name this shopping list?')
+        print('\nHow do you want to name this shopping list?')
         name = input()
         shop_list = open(os.path.join(permanent_result_folder_full_path, f'{name}' + '.txt'), "x")
         shop_list.write("Your shopping list:")

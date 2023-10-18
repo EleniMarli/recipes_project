@@ -15,7 +15,7 @@
         flour, 100 gr
         flour, 350 gr
 
-## Execution only on command line
+## Execute only on command line
 * Execute on the command line:
         
         python -u main/app.py

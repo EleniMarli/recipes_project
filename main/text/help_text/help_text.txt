@@ -1,4 +1,7 @@
-How to use the graphical user interface:
+Main menu:
+- You can add a new recipe or make a shopping list using already existing recipes
+
+Create shopping list:
 - Click on the recipes whose ingredients you want to include in your shopping list
 - Click OK
 - Your shopping list will get generated below

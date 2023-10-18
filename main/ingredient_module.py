@@ -1,4 +1,4 @@
-class Ingredient:  # defining the class
+class Ingredient:
     def __init__ (self, amount_local, metric_unit_local, name_local):
         self.amount = amount_local
         self.metric_unit = metric_unit_local

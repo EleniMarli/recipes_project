@@ -5,6 +5,6 @@ __pycache__/
 # ignore coverage file
 .coverage
 
-# ignore generated shopping list
-main/text/result/myshoppinglist.txt
-test/text/result/myshoppinglist.txt
+# ignore generated items
+main/text/result/
+test/text/result/
