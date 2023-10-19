@@ -6,6 +6,7 @@ import PySimpleGUI as sg
 import os
 import random
 
+from recipe_module import Recipe
 from main.main_commands import from_filenames_to_temporary_shopping_list
 from main.txt_files_config import remove_txt_from_filenames, add_txt_to_filenames
 from main.paths_config import recipes_full_path, result_full_path, help_text_full_path
@@ -60,13 +61,16 @@ def add_recipe_window():
             break
 
         if event2 == 'Add':
-            name_of_file = values2['-MULTILINE1-']
-            portions = values2['-MULTILINE2-']
+            name_of_file = values2['-MULTILINE1-'] + '.txt'
+            portions = float(values2['-MULTILINE2-'])
             instructions = values2['-MULTILINE3-']
-            ingredients = values2['-MULTILINE4-']
+            ingredients_list = values2['-MULTILINE4-'].split('\n')
 
-            with open (os.path.join(recipes_full_path, f'{name_of_file}' + '.txt'), "x") as recipe_file:
-                recipe_file.write(f"Instructions:\n{instructions}\n\nIngredients:\n{ingredients}")
+            list_of_ingr_objects = Recipe.create_list_of_ingredients(ingredients_list)
+
+            recipe = Recipe (name_of_file, instructions, portions, list_of_ingr_objects) 
+            
+            recipe.export_to_file()
             break
 
         if event2 == 'Help':

@@ -17,5 +17,8 @@ class Ingredient:
     def as_list (self):
         return [self.amount, self.metric_unit, self.name]
 
+    def as_str (self):
+        return f'{self.name}, {self.amount} {self.metric_unit}'
+
     def print_object (self):
         print(f"Ingredient with amount: {self.amount}, metric unit: {self.metric_unit} & name: {self.name}")
