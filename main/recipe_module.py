@@ -2,7 +2,7 @@
 
 import os
 from main.ingredient_module import Ingredient
-from paths_config import recipes_full_path
+from main.paths_config import recipes_full_path
 
 class Recipe:
     def __init__ (self, name_local : str, instructions_local : str, portions_local : float, list_local : list):   # these are just comments
@@ -24,7 +24,7 @@ class Recipe:
 
     @staticmethod
     def from_file (path_local, file_name_local):
-        list_of_ingr_objects_for_single_file = []
+        # list_of_ingr_objects_for_single_file = []
         with open(os.path.join(path_local, file_name_local)) as file:
             file_lines = file.read()
             file_list_of_str = file_lines.split('\n')
@@ -50,7 +50,7 @@ class Recipe:
         return Recipe(self.name, self.instructions, self.portions, self.list_of_ingredients)
     
 
-    def get_ingr_as_str (self):
+    def __get_ingr_as_str (self): # private method
         result_list = []
         for ingr in self.list_of_ingredients:
             result_list += [ingr.as_str()]
@@ -59,7 +59,7 @@ class Recipe:
 
     def export_to_file(self):
         with open (os.path.join(recipes_full_path, self.name), "w") as recipe_file:
-            recipe_file.write(f"Instructions:\n{self.instructions}\n\nPortions:\n{self.portions}\n\nIngredients:\n{self.get_ingr_as_str()}")
+            recipe_file.write(f"Instructions:\n{self.instructions}\n\nPortions:\n{self.portions}\n\nIngredients:\n{self.__get_ingr_as_str()}")
 
     def print_object (self):
         print(f"Recipe {self.name} consisting of following ingredients:")

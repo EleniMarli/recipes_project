@@ -1,7 +1,8 @@
+from shutil import rmtree
 from main.recipe_module import Recipe
 from main.shopping_list_module import Shopping_list
 from main.ingredient_module import Ingredient
-from test.paths_config_for_tests import result_full_path, shopping_list_full_path
+from test.paths_config_for_tests import result_full_path, temporary_shopping_list_full_path
 
 def test_shopping_list_can_be_created_from_list_of_recipes():
     # given
@@ -32,7 +33,26 @@ def test_combine_repetitions():
     list1 = list (map (lambda ingr : ingr.as_list(), shop_list1.list_of_all_ingredients))
     assert list1 == [ [4.0, 'unit(s)', 'egg(s)'], [250.0, 'gr', 'flour'] ]
 
-def test_export_to_text_file_from_path ():
+# def test_export_to_text_file_from_path ():
+#     # given
+#     shop_list1 = Shopping_list([ 
+#         Ingredient(3.0, 'unit(s)', 'egg(s)'),
+#         Ingredient(250.0, 'gr', 'flour'),
+#         Ingredient(1.0, 'unit(s)', 'egg(s)') 
+#         ])
+    
+#     # when
+#     shop_list1.export_to_temporary_text_file(result_full_path)
+    
+#     # then
+#     with open(shopping_list_full_path) as file:
+#         shopping_list = file.read()
+#         first_line = shopping_list.split('\n')[0]
+#         assert first_line == "Your shopping list:"
+#         assert "flour" in shopping_list
+#         assert "egg(s)" in shopping_list
+
+def test_export_to_temporary_txt_file_from_path ():
     # given
     shop_list1 = Shopping_list([ 
         Ingredient(3.0, 'unit(s)', 'egg(s)'),
@@ -42,11 +62,14 @@ def test_export_to_text_file_from_path ():
     
     # when
     shop_list1.export_to_temporary_text_file(result_full_path)
-    
+
     # then
-    with open(shopping_list_full_path) as file:
+    with open(temporary_shopping_list_full_path) as file:
         shopping_list = file.read()
         first_line = shopping_list.split('\n')[0]
         assert first_line == "Your shopping list:"
         assert "flour" in shopping_list
         assert "egg(s)" in shopping_list
+
+    # cleanup
+    rmtree(result_full_path)
