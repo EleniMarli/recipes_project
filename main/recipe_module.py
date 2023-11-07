@@ -2,7 +2,6 @@
 
 import os
 from main.ingredient_module import Ingredient
-from main.paths_config import recipes_full_path
 
 class Recipe:
     def __init__ (self, name_local : str, instructions_local : str, portions_local : float, list_local : list):   # these are just comments
@@ -42,6 +41,7 @@ class Recipe:
             
             return Recipe(file_name_local, instructions, portions, Recipe.create_list_of_ingredients (list_only_ingredients))
 
+
     def adjust_portions (self, new_portions):
         proportion = new_portions/self.portions
         self.portions = new_portions
@@ -57,9 +57,10 @@ class Recipe:
         return '\n'.join(result_list)
 
 
-    def export_to_file(self):
+    def export_to_file(self, recipes_full_path):
         with open (os.path.join(recipes_full_path, self.name), "w") as recipe_file:
-            recipe_file.write(f"Instructions:\n{self.instructions}\n\nPortions:\n{self.portions}\n\nIngredients:\n{self.__get_ingr_as_str()}")
+            recipe_file.write(f"Instructions:\n{self.instructions}\n\nPortions:\n{self.portions}\n\nIngredients:\n{self.__get_ingredients_as_str()}")
+
 
     def print_object (self):
         print(f"Recipe {self.name} consisting of following ingredients:")

@@ -3,7 +3,6 @@
 import os
 
 from main.ingredient_module import Ingredient
-from main.paths_config import permanent_result_folder_full_path
 
 class Shopping_list:
     def __init__ (self, list_local : list):
@@ -46,20 +45,19 @@ class Shopping_list:
         return self
 
 
-    def export_to_temporary_text_file (self, path_local):
-        shop_list = open(os.path.join(path_local, 'temporary', "myshoppinglist.txt"), "w") # "w" command creates a new file, but unlike the "x", it overwrites any existing file found with the same file name.
+    def export_to_temporary_text_file (self, result_path_local):
+        shop_list = open(os.path.join(result_path_local, 'temporary', "myshoppinglist.txt"), "w") # "w" command creates a new file, but unlike the "x", it overwrites any existing file found with the same file name.
         shop_list.write("Your shopping list:")
         for ingr in self.list_of_all_ingredients:
-            shop_list.write(f"\n{ingr.name}, {ingr.amount} {ingr.metric_unit} ")
+            shop_list.write(f"\n{ingr.as_str()}")
 
 
-    def export_to_permanent_text_file (self):
-        print('\nHow do you want to name this shopping list?')
-        name = input()
-        shop_list = open(os.path.join(permanent_result_folder_full_path, f'{name}' + '.txt'), "x")
+    def export_to_permanent_text_file (self, permanent_result_folder_full_path, filename_local):
+        shop_list = open(os.path.join(permanent_result_folder_full_path, filename_local + '.txt'), "x")
         shop_list.write("Your shopping list:")
         for ingr in self.list_of_all_ingredients:
-            shop_list.write(f"\n{ingr.name}, {ingr.amount} {ingr.metric_unit} ")
+            shop_list.write(f"\n{ingr.as_str()}")
+
 
 
     def print_object (self):
