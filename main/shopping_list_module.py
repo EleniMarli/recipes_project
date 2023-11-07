@@ -65,4 +65,4 @@ class Shopping_list:
     def print_object (self):
         print(f"Shopping list consisting of following ingredients:")
         for ingr in self.list_of_all_ingredients:
-            ingr.print_object()
+            ingr.print_object()       

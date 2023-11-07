@@ -13,7 +13,7 @@ class Recipe:
 
 
     @staticmethod
-    def create_list_of_ingredients (list_of_ingr_str):
+    def create_list_of_ingredients (list_of_ingr_str): # argument = ['egg(s), 4 unit(s)', 'flour, 400 gr']
         list_of_ingr_objects_for_single_file = []
         for str_Ingr in list_of_ingr_str:
             object_Ingr = Ingredient.from_str_to_ingredient(str_Ingr) # I make Ingredient objects here
@@ -46,11 +46,11 @@ class Recipe:
         proportion = new_portions/self.portions
         self.portions = new_portions
         for ingr in self.list_of_ingredients:
-            ingr.amount = ingr.amount*proportion
+            ingr.amount = round(ingr.amount*proportion,2)
         return Recipe(self.name, self.instructions, self.portions, self.list_of_ingredients)
     
 
-    def __get_ingr_as_str (self): # private method
+    def __get_ingredients_as_str (self): # private method
         result_list = []
         for ingr in self.list_of_ingredients:
             result_list += [ingr.as_str()]

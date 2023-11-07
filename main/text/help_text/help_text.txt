@@ -1,8 +1,11 @@
 Main menu:
-- You can add a new recipe or make a shopping list using already existing recipes
+- You can add a new recipe or create a shopping list using already existing recipes
 
 Create shopping list:
-- Click on the recipes whose ingredients you want to include in your shopping list
-- Click OK
+- Click on the recipe whose ingredients you want to include in your shopping list
+- Type the number of portions you want to cook for the recipe and click 'Add'
+- Repeat for all the recipes you want to include
+- You can always empty your Chosen recipes filed by clicking 'Empty'
+- When ready, click 'Generate' to create your shopping list
 - Your shopping list will get generated below
 - You can always edit your shopping list

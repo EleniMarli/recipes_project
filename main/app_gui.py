@@ -4,7 +4,7 @@ sys.path.append(str(Path(__file__).parents[1]))
 
 import PySimpleGUI as sg
 import os
-import random
+# import random
 
 from recipe_module import Recipe
 from shopping_list_module import Shopping_list
@@ -26,7 +26,7 @@ def help_window ():
     with open(help_text_full_path, 'r') as file:
 
         layout = [  [sg.Text('Help:', font = ('default', 11, 'bold'))],
-                    [sg.Multiline(default_text=file.read(), disabled=True, size=(70,10))],
+                    [sg.Multiline(default_text=file.read(), disabled=True, size=(70,13))],
                     [sg.Button('Back')]]
 
         window = sg.Window('Recipes project',layout)
@@ -71,7 +71,7 @@ def add_recipe_window():
 
             recipe = Recipe (name_of_file, instructions, portions, list_of_ingr_objects) 
             
-            recipe.export_to_file()
+            recipe.export_to_file(recipes_full_path)
             break
 
         if event2 == 'Help':

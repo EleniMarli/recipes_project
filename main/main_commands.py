@@ -3,7 +3,7 @@ import subprocess
 
 from main.recipe_module import Recipe
 from main.shopping_list_module import Shopping_list
-from main.paths_config import recipes_full_path, result_full_path, readme_full_path
+from main.paths_config import recipes_full_path, result_full_path, readme_full_path, permanent_result_folder_full_path
 from main.txt_files_config import remove_txt_from_filenames, add_dot_to_filenames
 
 
@@ -81,10 +81,19 @@ def execute_app():
                 user_input2 = input()
 
                 if user_input2 == 'yes':
-                    list_for_use.export_to_permanent_text_file()
-                    print('\nYour saved shopping list can be found in ./main/text/result/permanent directory')
-                    flag = False
+                    while True:
+                        print('\nHow do you want to name this shopping list?')
+                        filename = input()
+                        current_permanent_shopping_list_full_path = os.path.join(permanent_result_folder_full_path, filename + '.txt')
+                        if os.path.exists(current_permanent_shopping_list_full_path) == True:
+                            print(f'File with name {filename} already exists. Try an other name.')
+                        else:
+                            list_for_use.export_to_permanent_text_file(permanent_result_folder_full_path, filename)
+                            print('\nYour saved shopping list can be found in ./main/text/result/permanent directory')
+                            flag = False
+                            break
                     break
+                        
                 
                 elif user_input2 == 'no':
                     flag = False
