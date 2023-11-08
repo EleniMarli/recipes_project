@@ -59,12 +59,12 @@ def test_portions_adjustment ():
 # for this test i had to add the path as argument in the OG function!!!!
 def test_export_to_file():
     # given
-    recipe3 = Recipe ('recipe3.txt', 'Cook this', 1.0, [Ingredient(3.0, 'unit(s)', 'egg(s)')])
+    recipe33 = Recipe ('recipe33.txt', 'Cook this', 1.0, [Ingredient(3.0, 'unit(s)', 'egg(s)')])
 
     # when
-    recipe3.export_to_file(recipes_full_path)
+    recipe33.export_to_file(recipes_full_path)
 
     # then
-    with open (os.path.join(recipes_full_path, recipe3.name)) as file:
+    with open (os.path.join(recipes_full_path, recipe33.name)) as file:
         recipe3_str = file.read()
         assert recipe3_str.split('\n')[1] == 'Cook this'
