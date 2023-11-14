@@ -3,9 +3,18 @@
 import os
 
 from main.ingredient_module import Ingredient
+from main.databases.database_config import access_shopping_lists_database_and_return_con_n_cur
 
 class Shopping_list:
+
+    # CONTINUE HERE!!!!!!!!!!!!!!!!!!!!!!
+
+    def __init__ (self, name_local : str, list_local : list):
+        self.name = name_local
+        self.list_of_all_ingredients = list_local
+
     def __init__ (self, list_local : list):
+        self.name = ''
         self.list_of_all_ingredients = list_local
 
 
@@ -50,6 +59,15 @@ class Shopping_list:
         shop_list.write("Your shopping list:")
         for ingr in self.list_of_all_ingredients:
             shop_list.write(f"\n{ingr.as_str()}")
+
+
+    def save_to_database (self, given_name):
+        con, cur = access_shopping_lists_database_and_return_con_n_cur()
+        data = (f'{given_name}' , f'{self.list_of_all_ingredients}')  # name = i.e. 'Carbonara.txt'
+        cur.executemany("INSERT INTO shopping_lists VALUES(?, ?)", data)
+        con.commit()
+        con.close()
+        # list_of_ingredients column in this form: 'flour, 300.0 gr\neggs, 4.0 unit(s)' --> \n can be used to split easier
 
 
     def export_to_permanent_text_file (self, permanent_result_folder_full_path, filename_local):
