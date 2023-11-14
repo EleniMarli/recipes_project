@@ -75,3 +75,17 @@ def test_temporary_shopping_list_file_is_created_correctly():
         assert "spaghetti" in shopping_list_read
         assert "Pecorino" in shopping_list_read
         assert "vanilla" in shopping_list_read
+
+
+
+# def test_execute_app_creates_temporary_and_permanent_shopping_lists(monkeypatch):
+#     # setup
+#     user_input = iter(['4 2', 'yes', 'yes', 'shop_list_mock'])
+#     monkeypatch.setattr('builtins.input', lambda : next(user_input))
+    
+#     # when
+#     execute_app()
+
+#     # then
+#     assert os.path.exists(temporary_shopping_list_full_path) == True
+#     assert os.path.exists(os.path.join(permanent_result_folder_full_path, 'shop_list_mock.txt')) == True

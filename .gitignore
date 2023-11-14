@@ -8,3 +8,7 @@ __pycache__/
 # ignore generated items
 main/text/result/
 test/text/result/
+
+# ignore temporary files
+try_outs
+**/tempCodeRunnerFile*
