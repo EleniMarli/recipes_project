@@ -4,7 +4,6 @@ sys.path.append(str(Path(__file__).parents[1]))
 
 import PySimpleGUI as sg
 import os
-# import random
 
 from recipe_module import Recipe
 from shopping_list_module import Shopping_list
@@ -14,14 +13,7 @@ from main.paths_config import recipes_full_path, result_full_path, help_text_ful
 from main.databases.database_config import access_recipes_database_and_return_con_n_cur
 
 
-# playing with the themes:
-# themes = sg.list_of_look_and_feel_values()
-# chosen_theme = random.choice(themes)
-# print('The theme today is ' + chosen_theme)
-
-sg.theme('DarkGreen7')  # (previously 'DarkAmber')
-# sg.theme('DarkAmber')   # Add a touch of color
-
+sg.theme('DarkGreen7')  
 
 def help_window ():
     with open(help_text_full_path, 'r') as file:
@@ -42,7 +34,7 @@ def add_recipe_window():
     
 
     layout2 = [  [sg.Text('Add new recipe:', font = ('default', 11, 'bold'))],
-                [sg.Text('Title:', font = ('default', 10))],
+                [sg.Text('Name:', font = ('default', 10))],
                 [sg.Multiline(font = ('default', 10), size=(45,2), key='-MULTILINE1-')],
                 [sg.Text('Portions:', font = ('default', 10))],
                 [sg.Multiline(font = ('default', 10), size=(45,2), key='-MULTILINE2-')],
@@ -124,7 +116,7 @@ def make_shopping_list_window ():
                 [sg.Text('Chosen recipes:', font = ('default', 10))],
                 [sg.Listbox(values = chosen, size=(30, 6), key='-LISTBOX2-' ), sg.Button ('Generate'), sg.Button ('Empty')],
                 [sg.Text('Your shopping list:', font = ('default', 10))],
-                [sg.Multiline('Select recipes and click OK', font = ('default', 10, 'italic'), size=(45,20), key = '-MULTILINE-')],
+                [sg.Multiline('Select recipes and click OK', font = ('default', 10, 'italic'), size=(45,20), key = '-MULTILINE-'), sg.Button ('Save')],
                 [sg.Button('Help'), sg.Button('Close')]]
 
     window3 = sg.Window('Recipes project - create shopping list', layout3)
@@ -183,30 +175,36 @@ def make_shopping_list_window ():
     window3.close()
 
 
+def main_menu_window():
+
+    layout1 = [  [sg.Text('Main menu:', font = ('default', 11, 'bold'), pad=((10, 0), (10, 0)))],
+                [sg.Text('Welcome to Recipes project ❤️', font = ('default', 10), pad=((10, 0), (10, 10)))],
+                [sg.Button('Add new recipe', size=(20, 2), pad=((16, 0), (10, 10)))],
+                [sg.Button('Create shopping list', size=(20, 2), pad=((16, 0), (0, 10)))],
+                [sg.Button('Manage recipes', size=(20, 2), pad=((16, 0), (0, 10)))],
+                [sg.Button('Manage shopping lists', size=(20, 2), pad=((16, 0), (0, 10)))],
+                [sg.Button('Help', size=(5, 1), pad=((16, 0), (0, 10))), sg.Button('Close', size=(5, 1), pad=((9, 0), (0, 10)))]]
+
+
+    window1 = sg.Window('Recipes project', layout1, size=(220, 340))
+
+    while True:
+        event1, values1 = window1.read()
+
+        if event1 == sg.WIN_CLOSED or event1 == 'Close':
+            break
+
+        if event1 == 'Help':
+            help_window()            
+
+        if event1 == 'Add new recipe':
+            add_recipe_window()
+
+        if event1 == 'Create shopping list':
+            make_shopping_list_window ()
+        
+    window1.close()
 
 # START
 
-layout1 = [  [sg.Text('Welcome to Recipes Project:\nan easy way to manage recipes and shopping lists', font = ('default', 11, 'bold'))],
-            [sg.Button('Add new recipe')], 
-            [sg.Button('Create shopping list')],
-            [sg.Button('Help'), sg.Button('Close')]]
-
-
-window1 = sg.Window('Recipes project - main menu', layout1)
-
-while True:
-    event1, values1 = window1.read()
-
-    if event1 == sg.WIN_CLOSED or event1 == 'Close':
-        break
-
-    if event1 == 'Help':
-        help_window()            
-
-    if event1 == 'Add new recipe':
-        add_recipe_window()
-
-    if event1 == 'Create shopping list':
-        make_shoping_list_window ()
-    
-window1.close()
+main_menu_window()
