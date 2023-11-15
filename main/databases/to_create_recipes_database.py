@@ -1,7 +1,14 @@
+from pathlib import Path
+import sys
+sys.path.append(str(Path(__file__).parents[2]))
+
 import sqlite3
+import os
+
+from main.paths_config import recipes_database_path
 
 # Name of the database file
-con = sqlite3.connect('C:/VSCode/recipes_project/main/databases/recipes_database.db')
+con = sqlite3.connect(f'{recipes_database_path}')
 
 # Tool that allows interaction with the database by creating a cursor
 cur = con.cursor()

@@ -5,8 +5,8 @@ sys.path.append(str(Path(__file__).parents[1]))
 import PySimpleGUI as sg
 import os
 
-from recipe_module import Recipe
-from shopping_list_module import Shopping_list
+from main.recipe_module import Recipe
+from main.shopping_list_module import Shopping_list
 from main.main_commands import from_filenames_to_temporary_shopping_list
 from main.txt_files_config import remove_txt_from_filenames, add_txt_to_filenames
 from main.paths_config import recipes_full_path, result_full_path, help_text_full_path

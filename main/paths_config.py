@@ -2,6 +2,9 @@ import os
 
 absolute_path_main = os.path.dirname(__file__)
 
+recipes_database_path = os.path.join(absolute_path_main, 'databases', 'recipes_database.db')
+shopping_lists_database_path = os.path.join(absolute_path_main, 'databases', 'shopping_lists_database.db')
+
 recipes_full_path = os.path.join(absolute_path_main, 'text', 'recipes')
 result_full_path = os.path.join(absolute_path_main, 'text', 'result')
 readme_full_path = os.path.join(absolute_path_main, '..', 'README.md')
