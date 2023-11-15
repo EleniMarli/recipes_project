@@ -81,6 +81,28 @@ def add_recipe_window():
         
     window2.close()
 
+# CONTINUE HERE
+def save_shopping_list_window():
+    layout4 = [  [sg.Text('Save shopping list:', font = ('default', 11, 'bold'))],
+               [sg.Text('Name:', font = ('default', 10))],
+               [sg.Multiline(font = ('default', 10), size=(45,2), key='-MULTILINE1-')],
+               [sg.Text('Your shopping list:', font = ('default', 10))],
+               [sg.Multiline(font = ('default', 10), size=(45,20), key = '-MULTILINE-')],
+               [sg.Button('Save'), sg.Button('Help'), sg.Button('Close')]]
+    
+    window4 = sg.Window('Recipes project', layout4)
+
+    while True:
+
+        event4,values4 = window4.read()
+
+        if event4 == sg.WIN_CLOSED or event4 == 'Close':
+            break
+
+        if event4 == 'Help':
+            help_window()
+
+
 def make_shopping_list_window ():
     # all_filenames_as_list_of_str = os.listdir(recipes_full_path)
 
@@ -154,6 +176,9 @@ def make_shopping_list_window ():
                 shopping_list = file.read()
 
             window3['-MULTILINE-'].update(shopping_list, font = ('default', 10, 'normal'))
+
+        if event3 == 'Save':
+            save_shopping_list_window()
         
     window3.close()
 
