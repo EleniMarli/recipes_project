@@ -15,13 +15,13 @@
         flour, 100 gr
         flour, 350 gr
 
-## Execute only on command line
+## Execute only on command line (work in progress)
 * Execute on the command line:
         
         python -u main/app.py
 
 
-* Now you have your shopping list in the ```main/text/result``` directory.
+* Now you have your shopping list in the ```main/text/temporary/result``` directory.
 
 ## Execute using the graphical user interface
 * Install the necessary dependencies by writing on the command line:
@@ -36,4 +36,4 @@
         
         python -u main/app_gui.py
 
-* Now you have your shopping list in the ```main/text/result``` directory and it appears also on the graphical user interface after clicking ```OK```.
+* Now you have your shopping list in the ```main/text/temporary/result``` directory and it appears also on the graphical user interface after clicking ```Generate```.
