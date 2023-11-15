@@ -7,13 +7,11 @@ from main.databases.database_config import access_shopping_lists_database_and_re
 
 class Shopping_list:
 
-    # CONTINUE HERE!!!!!!!!!!!!!!!!!!!!!!
-
-    def __init__ (self, name_local : str, list_local : list):
+    def __init__ (self, name_local : str, list_local : list):  # for 2 arguments
         self.name = name_local
         self.list_of_all_ingredients = list_local
 
-    def __init__ (self, list_local : list):
+    def __init__ (self, list_local : list):  # for 1 argument
         self.name = ''
         self.list_of_all_ingredients = list_local
 
@@ -54,27 +52,30 @@ class Shopping_list:
         return self
 
 
+    def to_str(self):
+        list1 = []
+        for ingr in self.list_of_all_ingredients:
+            list1 += [ingr.as_str()]
+        return '\n'.join(list1)
+
+
     def export_to_temporary_text_file (self, result_path_local):
         shop_list = open(os.path.join(result_path_local, 'temporary', "myshoppinglist.txt"), "w") # "w" command creates a new file, but unlike the "x", it overwrites any existing file found with the same file name.
-        shop_list.write("Your shopping list:")
-        for ingr in self.list_of_all_ingredients:
-            shop_list.write(f"\n{ingr.as_str()}")
+        shop_list.write("Your shopping list:\n")
+        shop_list.write(self.to_str())
 
 
-    def save_to_database (self, given_name):
+    def save_in_database (self):
         con, cur = access_shopping_lists_database_and_return_con_n_cur()
-        data = (f'{given_name}' , f'{self.list_of_all_ingredients}')  # name = i.e. 'Carbonara.txt'
-        cur.executemany("INSERT INTO shopping_lists VALUES(?, ?)", data)
+        cur.execute(f"INSERT INTO shopping_lists (name, str_with_all_ingredients) VALUES ('{self.name}', '{self.to_str()}')")  # 'flour, 300.0 gr\neggs, 4.0 unit(s)' --> \n can be used to split easier
         con.commit()
         con.close()
-        # list_of_ingredients column in this form: 'flour, 300.0 gr\neggs, 4.0 unit(s)' --> \n can be used to split easier
 
 
     def export_to_permanent_text_file (self, permanent_result_folder_full_path, filename_local):
         shop_list = open(os.path.join(permanent_result_folder_full_path, filename_local + '.txt'), "x")
-        shop_list.write("Your shopping list:")
-        for ingr in self.list_of_all_ingredients:
-            shop_list.write(f"\n{ingr.as_str()}")
+        shop_list.write("Your shopping list:\n")
+        shop_list.write(self.to_str())
 
 
 

@@ -62,10 +62,9 @@ def add_recipe_window():
 
             list_of_ingr_objects = Recipe.create_list_of_ingredients(ingredients_list)
 
-            recipe = Recipe (name_of_file, instructions, portions, list_of_ingr_objects) 
-            
-            # recipe.export_to_file(recipes_full_path)
-            recipe.insert_to_database() ###### NEW FOR DB
+            recipe = Recipe (name_of_file, instructions, portions, list_of_ingr_objects)
+
+            recipe.insert_to_database()
             break
 
         if event2 == 'Help':
@@ -96,8 +95,6 @@ def save_shopping_list_window():
 
 
 def make_shopping_list_window ():
-    # all_filenames_as_list_of_str = os.listdir(recipes_full_path)
-
     con, cur = access_recipes_database_and_return_con_n_cur()
     cur.execute("SELECT name FROM recipes")
     results = cur.fetchall()
@@ -106,7 +103,7 @@ def make_shopping_list_window ():
 
     all_recipe_names_as_list_of_str = [result[0] for result in results]
 
-    filenames = remove_txt_from_filenames(all_recipe_names_as_list_of_str)
+    filenames = remove_txt_from_filenames(all_recipe_names_as_list_of_str)  ###################### HERE
 
     chosen = []
 
@@ -147,25 +144,13 @@ def make_shopping_list_window ():
             recipes = []
 
             for choice in chosen:
-                # filename  = choice[5:] + '.txt'
-                # portions = float(choice[:3][-1])
-                # recipes += [Recipe.from_file(recipes_full_path, filename).adjust_portions(portions)]
-
                 recipe_name = choice[5:] + '.txt'
                 portions = float(choice[:3][-1])
                 recipes += [Recipe.retrieve_from_database(recipe_name).adjust_portions(portions)]
 
             shopping_list_object = Shopping_list.from_list_of_recipes(recipes).combine_repetitions()
-            shopping_list_object.export_to_temporary_text_file(result_full_path)
-            
-            
-              ####### THIS NEEDS ADJUSTMENT FOR DB
 
-            # 
-
-            with open (os.path.join(result_full_path, "temporary", "myshoppinglist.txt")) as file: 
-                file.readline()
-                shopping_list = file.read()
+            shopping_list = shopping_list_object.to_str()
 
             window3['-MULTILINE-'].update(shopping_list, font = ('default', 10, 'normal'))
 

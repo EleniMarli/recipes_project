@@ -14,7 +14,8 @@ con = sqlite3.connect(f'{recipes_database_path}')
 cur = con.cursor()
 
 # Create table named "recipes" with COLUMNS for name, instr, portions and ingr
-cur.execute("CREATE TABLE recipes (name, instructions, portions, str_with_all_ingredients)")
+cur.execute("CREATE TABLE recipes (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, instructions TEXT, portions, str_with_all_ingredients TEXT)")
+cur.execute("CREATE INDEX idx_name ON recipes(name)")
 
 # list_of_ingredients column in this form: 'flour, 300.0 gr\neggs, 4.0 unit(s)' --> \n can be used to split easier
 

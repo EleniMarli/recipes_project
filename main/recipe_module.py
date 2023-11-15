@@ -5,7 +5,7 @@ import os
 from main.ingredient_module import Ingredient
 
 class Recipe:
-    def __init__ (self, name_local : str, instructions_local : str, portions_local : float, list_local : list):   # these are just comments
+    def __init__ (self, name_local : str, instructions_local : str, portions_local : float, list_local : list):
         self.name = name_local  # i.e. "Carbonara.txt"
         self.instructions = instructions_local
         self.portions = portions_local
@@ -65,8 +65,8 @@ class Recipe:
 
     def insert_to_database (self):
         con, cur = access_recipes_database_and_return_con_n_cur()
-        data = (f'{self.name}' , f'{self.instructions}', self.portions, f'{self.__get_ingredients_as_str()}') # name = i.e. 'Carbonara.txt'
-        cur.executemany("INSERT INTO recipes VALUES(?, ?, ?, ?)", data)
+        data = (self.name, self.instructions, self.portions, self.__get_ingredients_as_str()) # name = i.e. 'Carbonara.txt'
+        cur.execute(f"INSERT INTO recipes (name, instructions, portions, str_with_all_ingredients) VALUES (?, ?, ?, ?)", data)
         con.commit()
         con.close()
         # list_of_ingredients column in this form: 'flour, 300.0 gr\neggs, 4.0 unit(s)' --> \n can be used to split easier
@@ -74,7 +74,7 @@ class Recipe:
     @staticmethod
     def retrieve_from_database (recipe_name):  # recipe_name = i.e. 'Carbonara.txt'
         con, cur = access_recipes_database_and_return_con_n_cur()
-        cur.execute(f"SELECT * FROM recipes WHERE name='{recipe_name}'")
+        cur.execute(f"SELECT name, instructions, portions, str_with_all_ingredients FROM recipes WHERE name='{recipe_name}'")
         name, instructions, portions, ingr = cur.fetchone()  # ('Carbonara.txt', 'Cook this.', 4.0, 'egg(s), 3.0 unit(s)\nflour, 400.0 gr')
         con.commit()
         con.close()
