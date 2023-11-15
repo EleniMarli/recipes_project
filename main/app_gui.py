@@ -11,6 +11,7 @@ from shopping_list_module import Shopping_list
 from main.main_commands import from_filenames_to_temporary_shopping_list
 from main.txt_files_config import remove_txt_from_filenames, add_txt_to_filenames
 from main.paths_config import recipes_full_path, result_full_path, help_text_full_path
+from main.databases.database_config import access_recipes_database_and_return_con_n_cur
 
 
 # playing with the themes:
@@ -71,7 +72,8 @@ def add_recipe_window():
 
             recipe = Recipe (name_of_file, instructions, portions, list_of_ingr_objects) 
             
-            recipe.export_to_file(recipes_full_path)
+            # recipe.export_to_file(recipes_full_path)
+            recipe.insert_to_database() ###### NEW FOR DB
             break
 
         if event2 == 'Help':
@@ -79,10 +81,19 @@ def add_recipe_window():
         
     window2.close()
 
+def make_shopping_list_window ():
+    # all_filenames_as_list_of_str = os.listdir(recipes_full_path)
 
-def make_shoping_list_window ():
-    all_filenames_as_list_of_str = os.listdir(recipes_full_path)
-    filenames = remove_txt_from_filenames(all_filenames_as_list_of_str)
+    con, cur = access_recipes_database_and_return_con_n_cur()
+    cur.execute("SELECT name FROM recipes")
+    results = cur.fetchall()
+    con.commit()
+    con.close()
+
+    all_recipe_names_as_list_of_str = [result[0] for result in results]
+
+    filenames = remove_txt_from_filenames(all_recipe_names_as_list_of_str)
+
     chosen = []
 
     layout3 = [  [sg.Text('Create shopping list:', font = ('default', 11, 'bold'))],
@@ -122,12 +133,22 @@ def make_shoping_list_window ():
             recipes = []
 
             for choice in chosen:
-                filename  = choice[5:] + '.txt'
-                portions = float(choice[:3][-1])
-                recipes += [Recipe.from_file(recipes_full_path, filename).adjust_portions(portions)]
+                # filename  = choice[5:] + '.txt'
+                # portions = float(choice[:3][-1])
+                # recipes += [Recipe.from_file(recipes_full_path, filename).adjust_portions(portions)]
 
-            Shopping_list.from_list_of_recipes(recipes).combine_repetitions().export_to_temporary_text_file(result_full_path)
-   
+                recipe_name = choice[5:] + '.txt'
+                portions = float(choice[:3][-1])
+                recipes += [Recipe.retrieve_from_database(recipe_name).adjust_portions(portions)]
+
+            shopping_list_object = Shopping_list.from_list_of_recipes(recipes).combine_repetitions()
+            shopping_list_object.export_to_temporary_text_file(result_full_path)
+            
+            
+              ####### THIS NEEDS ADJUSTMENT FOR DB
+
+            # 
+
             with open (os.path.join(result_full_path, "temporary", "myshoppinglist.txt")) as file: 
                 file.readline()
                 shopping_list = file.read()
