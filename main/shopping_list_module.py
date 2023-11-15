@@ -3,7 +3,7 @@
 import os
 
 from main.ingredient_module import Ingredient
-from main.databases.database_config import access_shopping_lists_database_and_return_con_n_cur
+from main.databases.db_utils_module import DB_utils
 
 class Shopping_list:
 
@@ -66,10 +66,11 @@ class Shopping_list:
 
 
     def save_in_database (self):
-        con, cur = access_shopping_lists_database_and_return_con_n_cur()
-        cur.execute(f"INSERT INTO shopping_lists (name, str_with_all_ingredients) VALUES ('{self.name}', '{self.to_str()}')")  # 'flour, 300.0 gr\neggs, 4.0 unit(s)' --> \n can be used to split easier
-        con.commit()
-        con.close()
+        query = f"""
+        INSERT INTO shopping_lists (name, str_with_all_ingredients) 
+        VALUES ('{self.name}', '{self.to_str()}')
+        """
+        DB_utils.insert_to_shopping_lists_database(query)
 
 
     def export_to_permanent_text_file (self, permanent_result_folder_full_path, filename_local):

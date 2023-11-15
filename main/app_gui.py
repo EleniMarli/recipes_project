@@ -10,7 +10,6 @@ from main.shopping_list_module import Shopping_list
 from main.main_commands import from_filenames_to_temporary_shopping_list
 from main.txt_files_config import remove_txt_from_filenames, add_txt_to_filenames
 from main.paths_config import recipes_full_path, result_full_path, help_text_full_path
-from main.databases.database_config import access_recipes_database_and_return_con_n_cur
 
 
 sg.theme('DarkGreen7')  
@@ -95,13 +94,7 @@ def save_shopping_list_window():
 
 
 def make_shopping_list_window ():
-    con, cur = access_recipes_database_and_return_con_n_cur()
-    cur.execute("SELECT name FROM recipes")
-    results = cur.fetchall()
-    con.commit()
-    con.close()
-
-    all_recipe_names_as_list_of_str = [result[0] for result in results]
+    all_recipe_names_as_list_of_str = Recipe.get_all_recipe_names_from_db()
 
     filenames = remove_txt_from_filenames(all_recipe_names_as_list_of_str)  ###################### HERE
 
@@ -144,8 +137,10 @@ def make_shopping_list_window ():
             recipes = []
 
             for choice in chosen:
-                recipe_name = choice[5:] + '.txt'
-                portions = float(choice[:3][-1])
+                split_choice = choice.split(' ')
+                recipe_name = ' '.join(split_choice[1::]) + '.txt'
+                portions = float(split_choice[0][2:-1:])
+
                 recipes += [Recipe.retrieve_from_database(recipe_name).adjust_portions(portions)]
 
             shopping_list_object = Shopping_list.from_list_of_recipes(recipes).combine_repetitions()

@@ -3,12 +3,11 @@ import sys
 sys.path.append(str(Path(__file__).parents[2]))
 
 import sqlite3
-import os
 
 from main.paths_config import shopping_lists_database_path
 
 # Name of the database file
-con = sqlite3.connect(f'{shopping_lists_database_path}')
+con = sqlite3.connect(shopping_lists_database_path)
 
 # Tool that allows interaction with the database by creating a cursor
 cur = con.cursor()

@@ -1,8 +1,7 @@
-import sqlite3
-from main.databases.database_config import access_recipes_database_and_return_con_n_cur
-
 import os
+
 from main.ingredient_module import Ingredient
+from main.databases.db_utils_module import DB_utils
 
 class Recipe:
     def __init__ (self, name_local : str, instructions_local : str, portions_local : float, list_local : list):
@@ -64,21 +63,29 @@ class Recipe:
 
 
     def insert_to_database (self):
-        con, cur = access_recipes_database_and_return_con_n_cur()
-        data = (self.name, self.instructions, self.portions, self.__get_ingredients_as_str()) # name = i.e. 'Carbonara.txt'
-        cur.execute(f"INSERT INTO recipes (name, instructions, portions, str_with_all_ingredients) VALUES (?, ?, ?, ?)", data)
-        con.commit()
-        con.close()
+        query = f"""
+        INSERT INTO recipes (name, instructions, portions, str_with_all_ingredients) 
+        VALUES ('{self.name}', '{self.instructions}', '{self.portions}', '{self.__get_ingredients_as_str()}')
+        """
+        # name = i.e. 'Carbonara.txt'
         # list_of_ingredients column in this form: 'flour, 300.0 gr\neggs, 4.0 unit(s)' --> \n can be used to split easier
+        DB_utils.insert_to_recipes_database(query)
+        
+
+    @staticmethod
+    def get_all_recipe_names_from_db ():
+        results = DB_utils.retrieve_from_recipes_database("SELECT name FROM recipes")
+        return [result[0] for result in results]
 
     @staticmethod
     def retrieve_from_database (recipe_name):  # recipe_name = i.e. 'Carbonara.txt'
-        con, cur = access_recipes_database_and_return_con_n_cur()
-        cur.execute(f"SELECT name, instructions, portions, str_with_all_ingredients FROM recipes WHERE name='{recipe_name}'")
-        name, instructions, portions, ingr = cur.fetchone()  # ('Carbonara.txt', 'Cook this.', 4.0, 'egg(s), 3.0 unit(s)\nflour, 400.0 gr')
-        con.commit()
-        con.close()
-        return Recipe (name, instructions, portions, Recipe.create_list_of_ingredients(ingr.split('\n')))
+        query = f"""
+        SELECT name, instructions, portions, str_with_all_ingredients 
+        FROM recipes 
+        WHERE name='{recipe_name}'
+        """
+        name, instructions, portions, ingr = DB_utils.retrieve_from_recipes_database(query)[0]  # ('Carbonara.txt', 'Cook this.', 4.0, 'egg(s), 3.0 unit(s)\nflour, 400.0 gr')
+        return Recipe (name, instructions, float(portions), Recipe.create_list_of_ingredients(ingr.split('\n')))
 
 
     def print_object (self):
