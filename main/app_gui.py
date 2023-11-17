@@ -3,16 +3,16 @@ import sys
 sys.path.append(str(Path(__file__).parents[1]))
 
 import PySimpleGUI as sg
-import os
+
+from datetime import datetime
 
 from main.recipe_module import Recipe
 from main.shopping_list_module import Shopping_list
-from main.main_commands import from_filenames_to_temporary_shopping_list
-from main.txt_files_config import remove_txt_from_filenames, add_txt_to_filenames
-from main.paths_config import recipes_full_path, result_full_path, help_text_full_path
+from main.paths_config import help_text_full_path
 
 
-sg.theme('DarkGreen7')  
+sg.theme('DarkGreen7')
+
 
 def help_window ():
     with open(help_text_full_path, 'r') as file:
@@ -31,8 +31,7 @@ def help_window ():
 
 def add_recipe_window():
     
-
-    layout2 = [  [sg.Text('Add new recipe:', font = ('default', 11, 'bold'))],
+    layout = [  [sg.Text('Add new recipe:', font = ('default', 11, 'bold'))],
                 [sg.Text('Name:', font = ('default', 10))],
                 [sg.Multiline(font = ('default', 10), size=(45,2), key='-MULTILINE1-')],
                 [sg.Text('Portions:', font = ('default', 10))],
@@ -40,24 +39,24 @@ def add_recipe_window():
                 [sg.Text('Instructions:', font = ('default', 10))],
                 [sg.Multiline(font = ('default', 10), size=(45,10), key='-MULTILINE3-')],
                 [sg.Text('Ingredients:', font = ('default', 10))],
-                [sg.Multiline('(i.e. flour, 500 gr)', font = ('default', 10), size=(45,10), key='-MULTILINE4-')],
-                [sg.Button('Add'), sg.Button('Help'), sg.Button('Close')]]
+                [sg.Multiline('(keep this format: flour, 500 gr)', font = ('default', 10, 'italic'), size=(45,10), key='-MULTILINE4-')],
+                [sg.Button('Save'), sg.Button('Help'), sg.Button('Close')]]
 
 
-    window2 = sg.Window('Recipes project', layout2)
+    window = sg.Window('Recipes project', layout)
 
     while True:
 
-        event2,values2 = window2.read()
+        event,values = window.read()
 
-        if event2 == sg.WIN_CLOSED or event2 == 'Close':
+        if event == sg.WIN_CLOSED or event == 'Close':
             break
 
-        if event2 == 'Add':
-            name_of_file = values2['-MULTILINE1-'] + '.txt'
-            portions = float(values2['-MULTILINE2-'])
-            instructions = values2['-MULTILINE3-']
-            ingredients_list = values2['-MULTILINE4-'].split('\n')
+        if event == 'Save':
+            name_of_file = values['-MULTILINE1-']
+            portions = float(values['-MULTILINE2-'])
+            instructions = values['-MULTILINE3-']
+            ingredients_list = values['-MULTILINE4-'].split('\n')
 
             list_of_ingr_objects = Recipe.create_list_of_ingredients(ingredients_list)
 
@@ -66,124 +65,386 @@ def add_recipe_window():
             recipe.insert_to_database()
             break
 
-        if event2 == 'Help':
+        if event == 'Help':
             help_window()
         
-    window2.close()
+    window.close()
 
-# CONTINUE HERE
-def save_shopping_list_window():
-    layout4 = [  [sg.Text('Save shopping list:', font = ('default', 11, 'bold'))],
-               [sg.Text('Name:', font = ('default', 10))],
-               [sg.Multiline(font = ('default', 10), size=(45,2), key='-MULTILINE1-')],
-               [sg.Text('Your shopping list:', font = ('default', 10))],
-               [sg.Multiline(font = ('default', 10), size=(45,20), key = '-MULTILINE-')],
-               [sg.Button('Save'), sg.Button('Help'), sg.Button('Close')]]
-    
-    window4 = sg.Window('Recipes project', layout4)
+
+def edit_recipe_window(selected_recipe):
+
+    recipe_object = Recipe.retrieve_from_database(selected_recipe)
+    ingredients = recipe_object.get_ingredients_as_str()
+
+    layout = [  [sg.Text('Edit recipe:', font = ('default', 11, 'bold'))],
+                [sg.Text('Name:', font = ('default', 10))],
+                [sg.Multiline(recipe_object.name, font = ('default', 10), size=(45,2), key='-MULTILINE1-')],
+                [sg.Text('Portions:', font = ('default', 10))],
+                [sg.Multiline(recipe_object.portions, font = ('default', 10), size=(45,2), key='-MULTILINE2-')],
+                [sg.Text('Instructions:', font = ('default', 10))],
+                [sg.Multiline(recipe_object.instructions, font = ('default', 10), size=(45,10), key='-MULTILINE3-')],
+                [sg.Text('Ingredients:', font = ('default', 10))],
+                [sg.Multiline(ingredients, font = ('default', 10), size=(45,10), key='-MULTILINE4-')],
+                [sg.Button('Save'), sg.Button('Help'), sg.Button('Close')]]
+
+    window = sg.Window('Recipes project', layout)
 
     while True:
 
-        event4,values4 = window4.read()
+        event,values = window.read()
 
-        if event4 == sg.WIN_CLOSED or event4 == 'Close':
+        if event == sg.WIN_CLOSED or event == 'Close':
             break
 
-        if event4 == 'Help':
+        if event == 'Help':
             help_window()
+
+        if event == 'Save':
+            new_name = values['-MULTILINE1-']
+            new_portions = float(values['-MULTILINE2-'])
+            new_instructions = values['-MULTILINE3-']
+            new_ingredients_list = values['-MULTILINE4-'].split('\n')
+
+            list_of_ingr_objects = Recipe.create_list_of_ingredients(new_ingredients_list)
+
+            updated_recipe_object = Recipe (new_name, new_instructions, new_portions, list_of_ingr_objects)
+
+            Recipe.delete_from_database(recipe_object.name)
+            updated_recipe_object.insert_to_database()
+            break
+        
+    window.close()
+
+
+def delete_recipe_window(selected_recipe):
+    layout = [ [sg.Text(f'Are you sure you want to delete {selected_recipe}?', font = ('default', 10))],
+                        [sg.Button('Yes'), sg.Button('No')]]
+            
+    window = sg.Window('Recipes project', layout)
+
+    while True:
+
+        event,values = window.read()
+
+        if event == sg.WIN_CLOSED or event == 'No':
+            break
+
+        if event == 'Yes':
+            Recipe.delete_from_database(selected_recipe)
+            break
+
+    window.close()
+
+
+def manage_recipes_window ():
+    all_recipe_names_as_list_of_str = Recipe.get_all_recipe_names_from_db()
+
+    layout = [  [sg.Text('Manage recipes:', font = ('default', 11, 'bold'))],
+                [sg.Text('Choose a recipe and edit or delete it:', font = ('default', 10))],
+                [sg.Listbox(values = all_recipe_names_as_list_of_str, size=(30, 6), select_mode = sg.LISTBOX_SELECT_MODE_SINGLE, key='-LISTBOX-'), sg.Button ('Delete'), sg.Button ('Edit')],
+                [sg.Button('Help', size=(5, 1), pad=((16, 0), (20, 10))), sg.Button('Close', size=(5, 1), pad=((9, 0), (20, 10)))]]
+    
+    window = sg.Window('Recipes project', layout)
+
+    while True:
+
+        event,values = window.read()
+
+        if event == sg.WIN_CLOSED or event == 'Close':
+            break
+
+        if event == 'Help':
+            help_window()
+
+        if event == 'Delete':
+            selected_recipe = values['-LISTBOX-'][0]
+            delete_recipe_window(selected_recipe)
+            all_new_recipe_names_as_list_of_str = Recipe.get_all_recipe_names_from_db()
+            window['-LISTBOX-'].update(all_new_recipe_names_as_list_of_str)
+
+        if event == "Edit":
+            selected_recipe = values['-LISTBOX-'][0]
+            edit_recipe_window(selected_recipe)
+
+    window.close()
+
+
+def my_recipes_window():
+
+    layout = [  [sg.Text('My recipes:', font = ('default', 11, 'bold'), pad=((10, 0), (10, 10)))],
+                [sg.Button('Add new recipe', size=(20, 2), pad=((16, 0), (10, 10)))],
+                [sg.Button('Manage my recipes', size=(20, 2), pad=((16, 0), (0, 10)))],
+                [sg.Button('Help', size=(5, 1), pad=((16, 0), (20, 10))), sg.Button('Close', size=(5, 1), pad=((9, 0), (20, 10)))]]
+
+    window = sg.Window('Recipes project', layout, size=(220, 240))
+
+    while True:
+        event, values = window.read()
+
+        if event == sg.WIN_CLOSED or event == 'Close':
+            break
+
+        if event == 'Help':
+            help_window()            
+
+        if event == 'Add new recipe':
+            add_recipe_window()
+
+        if event == 'Manage my recipes':
+            manage_recipes_window()
+        
+    window.close()
+
+
+def save_shopping_list_window(shopping_list):
+
+    timestamp = datetime.now().strftime(r"%d-%m-%Y (%H:%M)")
+
+    layout = [  [sg.Text('Save shopping list:', font = ('default', 11, 'bold'))],
+               [sg.Text('Name:', font = ('default', 10))],
+               [sg.Multiline(timestamp, font = ('default', 10, 'italic'), size=(45,2), key='-MULTILINE1-')],
+               [sg.Text('Your shopping list:', font = ('default', 10))],
+               [sg.Multiline(shopping_list, font = ('default', 10, 'normal'), size=(45,20), key = '-MULTILINE2-')],
+               [sg.Button('Save'), sg.Button('Help'), sg.Button('Close')]]
+    
+    window = sg.Window('Recipes project', layout)
+    
+    saved_was_clicked = False
+
+    while True:
+
+        event,values = window.read()
+
+        if event == sg.WIN_CLOSED or event == 'Close':
+            break
+
+        if event == 'Help':
+            help_window()
+
+        if event == 'Save':
+            name_of_shopping_list = values['-MULTILINE1-']
+            ingredients_list = values['-MULTILINE2-'].split('\n')
+
+            list_of_ingr_objects = Shopping_list.create_list_of_ingredients(ingredients_list)
+            shopping_list_to_save = Shopping_list (name_of_shopping_list, list_of_ingr_objects)
+
+            shopping_list_to_save.insert_to_database()
+            saved_was_clicked = True
+            break
+
+    window.close()
+    return saved_was_clicked
 
 
 def make_shopping_list_window ():
     all_recipe_names_as_list_of_str = Recipe.get_all_recipe_names_from_db()
 
-    filenames = remove_txt_from_filenames(all_recipe_names_as_list_of_str)  ###################### HERE
-
     chosen = []
 
-    layout3 = [  [sg.Text('Create shopping list:', font = ('default', 11, 'bold'))],
+    layout = [  [sg.Text('Create shopping list:', font = ('default', 11, 'bold'))],
                 [sg.Text('Choose a recipe and type portions number:', font = ('default', 10))],
-                [sg.Listbox(values = filenames, size=(30, 6), select_mode = sg.LISTBOX_SELECT_MODE_SINGLE, key='-LISTBOX1-'), sg.Text('Portions:'), sg.InputText('', size=(2, 1), key='-EDIT-'), sg.Button ('Add')], #!!
+                [sg.Listbox(values = all_recipe_names_as_list_of_str, size=(30, 6), select_mode = sg.LISTBOX_SELECT_MODE_SINGLE, key='-LISTBOX1-'), sg.Text('Portions:'), sg.InputText('', size=(2, 1), key='-EDIT-'), sg.Button ('Add')], #!!
                 [sg.Text('Chosen recipes:', font = ('default', 10))],
                 [sg.Listbox(values = chosen, size=(30, 6), key='-LISTBOX2-' ), sg.Button ('Generate'), sg.Button ('Empty')],
                 [sg.Text('Your shopping list:', font = ('default', 10))],
-                [sg.Multiline('Select recipes and click OK', font = ('default', 10, 'italic'), size=(45,20), key = '-MULTILINE-'), sg.Button ('Save')],
+                [sg.Multiline('If you are happy with the chosen recipes and portions click Generate.', font = ('default', 10, 'italic'), size=(45,20), key = '-MULTILINE-'), sg.Button ('Save')],
                 [sg.Button('Help'), sg.Button('Close')]]
 
-    window3 = sg.Window('Recipes project - create shopping list', layout3)
+    window = sg.Window('Recipes project - create shopping list', layout)
 
-    while True:
+    flag = False
 
-        event3, values3 = window3.read()
+    while flag == False:
 
-        if event3 == sg.WIN_CLOSED or event3 == 'Close':
-            break
+        event, values = window.read()
 
-        if event3 == 'Help':
+        if event == sg.WIN_CLOSED or event == 'Close':
+            flag = True
+
+        if event == 'Help':
             help_window()    
 
-        if event3 == 'Add':
-            selected_recipe = values3['-LISTBOX1-'][0]
-            portions = values3['-EDIT-']
+        if event == 'Add':
+            selected_recipe = values['-LISTBOX1-'][0]
+            portions = values['-EDIT-']
             chosen += [f'(x{portions}) {selected_recipe}']
 
-            window3['-LISTBOX2-'].update(chosen)
+            window['-LISTBOX2-'].update(chosen)
 
-        if event3 == 'Empty':
+        if event == 'Empty':
             chosen = []
 
-            window3['-LISTBOX2-'].update(chosen)
+            window['-LISTBOX2-'].update(chosen)
         
-        if event3 == 'Generate':
+        if event == 'Generate':
             recipes = []
 
             for choice in chosen:
                 split_choice = choice.split(' ')
-                recipe_name = ' '.join(split_choice[1::]) + '.txt'
+                recipe_name = ' '.join(split_choice[1::])
                 portions = float(split_choice[0][2:-1:])
 
                 recipes += [Recipe.retrieve_from_database(recipe_name).adjust_portions(portions)]
 
             shopping_list_object = Shopping_list.from_list_of_recipes(recipes).combine_repetitions()
 
-            shopping_list = shopping_list_object.to_str()
+            shopping_list = shopping_list_object.get_ingredients_as_str()
 
-            window3['-MULTILINE-'].update(shopping_list, font = ('default', 10, 'normal'))
+            window['-MULTILINE-'].update(shopping_list, font = ('default', 10, 'normal'))
 
-        if event3 == 'Save':
-            save_shopping_list_window()
+        if event == 'Save':
+            shopping_list_for_saving = values['-MULTILINE-']
+            flag = save_shopping_list_window(shopping_list_for_saving)
+
+    window.close()
+
+
+def edit_shopping_list_window(selected_shopping_list):
+
+    shopping_list_object = Shopping_list.retrieve_from_database(selected_shopping_list)
+    ingredients = shopping_list_object.get_ingredients_as_str()
+
+    layout = [  [sg.Text('Edit shopping list:', font = ('default', 11, 'bold'))],
+                [sg.Text('Name:', font = ('default', 10))],
+                [sg.Multiline(shopping_list_object.name, font = ('default', 10), size=(45,2), key='-MULTILINE1-')],
+                [sg.Text('Ingredients:', font = ('default', 10))],
+                [sg.Multiline(ingredients, font = ('default', 10), size=(45,10), key='-MULTILINE2-')],
+                [sg.Button('Save'), sg.Button('Help'), sg.Button('Close')]]
+
+    window = sg.Window('Recipes project', layout)
+
+    while True:
+
+        event,values = window.read()
+
+        if event == sg.WIN_CLOSED or event == 'Close':
+            break
+
+        if event == 'Help':
+            help_window()
+
+        if event == 'Save':
+            new_name = values['-MULTILINE1-']
+            new_ingredients_list = values['-MULTILINE2-'].split('\n')
+
+            list_of_ingr_objects = Shopping_list.create_list_of_ingredients(new_ingredients_list)
+
+            updated_shopping_list_object = Shopping_list (new_name, list_of_ingr_objects)
+
+            Shopping_list.delete_from_database(shopping_list_object.name)
+            updated_shopping_list_object.insert_to_database()
+            break
         
-    window3.close()
+    window.close()
+
+
+def delete_shopping_list_window(selected_shopping_list):
+    layout = [ [sg.Text(f'Are you sure you want to delete {selected_shopping_list}?', font = ('default', 10))],
+                        [sg.Button('Yes'), sg.Button('No')]]
+            
+    window = sg.Window('Recipes project', layout)
+
+    while True:
+
+        event,values = window.read()
+
+        if event == sg.WIN_CLOSED or event == 'No':
+            break
+
+        if event == 'Yes':
+            Shopping_list.delete_from_database(selected_shopping_list)
+            break
+            
+    window.close()
+
+
+def manage_shopping_lists_window ():
+    all_shopping_list_names_as_list_of_str = Shopping_list.get_all_shopping_list_names_from_db()
+
+    layout = [  [sg.Text('Manage shopping lists:', font = ('default', 11, 'bold'))],
+                [sg.Text('Choose a shopping list and edit or delete it:', font = ('default', 10))],
+                [sg.Listbox(values = all_shopping_list_names_as_list_of_str, size=(30, 6), select_mode = sg.LISTBOX_SELECT_MODE_SINGLE, key='-LISTBOX-'), sg.Button ('Delete'), sg.Button ('Edit')],
+                [sg.Button('Help', size=(5, 1), pad=((16, 0), (20, 10))), sg.Button('Close', size=(5, 1), pad=((9, 0), (20, 10)))]]
+
+    
+    window = sg.Window('Recipes project', layout)
+
+    while True:
+
+        event,values = window.read()
+
+        if event == sg.WIN_CLOSED or event == 'Close':
+            break
+
+        if event == 'Help':
+            help_window()
+
+        if event == 'Delete':
+            selected_shopping_list = values['-LISTBOX-'][0]
+            delete_shopping_list_window(selected_shopping_list)
+            all_new_shopping_list_names_as_list_of_str = Shopping_list.get_all_shopping_list_names_from_db()
+            window['-LISTBOX-'].update(all_new_shopping_list_names_as_list_of_str)
+
+        if event == "Edit":
+            selected_shopping_list = values['-LISTBOX-'][0]
+            edit_shopping_list_window(selected_shopping_list)
+
+    window.close()
+
+
+def my_shopping_lists_window():
+
+    layout = [  [sg.Text('My recipes:', font = ('default', 11, 'bold'), pad=((10, 0), (10, 10)))],
+                [sg.Button('Create shopping list', size=(20, 2), pad=((16, 0), (10, 10)))],
+                [sg.Button('Manage my shopping lists', size=(20, 2), pad=((16, 0), (0, 10)))],
+                [sg.Button('Help', size=(5, 1), pad=((16, 0), (20, 10))), sg.Button('Close', size=(5, 1), pad=((9, 0), (20, 10)))]]
+
+    window = sg.Window('Recipes project', layout, size=(220, 240))
+
+    while True:
+        event, values = window.read()
+
+        if event == sg.WIN_CLOSED or event == 'Close':
+            break
+
+        if event == 'Help':
+            help_window()            
+
+        if event == 'Create shopping list':
+            make_shopping_list_window()
+
+        if event == 'Manage my shopping lists':
+            manage_shopping_lists_window()
+        
+    window.close()
 
 
 def main_menu_window():
-
-    layout1 = [  [sg.Text('Main menu:', font = ('default', 11, 'bold'), pad=((10, 0), (10, 0)))],
+    layout = [  [sg.Text('Main menu:', font = ('default', 11, 'bold'), pad=((10, 0), (10, 0)))],
                 [sg.Text('Welcome to Recipes project ❤️', font = ('default', 10), pad=((10, 0), (10, 10)))],
-                [sg.Button('Add new recipe', size=(20, 2), pad=((16, 0), (10, 10)))],
-                [sg.Button('Create shopping list', size=(20, 2), pad=((16, 0), (0, 10)))],
-                [sg.Button('Manage recipes', size=(20, 2), pad=((16, 0), (0, 10)))],
-                [sg.Button('Manage shopping lists', size=(20, 2), pad=((16, 0), (0, 10)))],
-                [sg.Button('Help', size=(5, 1), pad=((16, 0), (0, 10))), sg.Button('Close', size=(5, 1), pad=((9, 0), (0, 10)))]]
+                [sg.Button('My recipes', size=(20, 2), pad=((16, 0), (10, 10)))],
+                [sg.Button('My shopping lists', size=(20, 2), pad=((16, 0), (0, 10)))],
+                [sg.Button('Help', size=(5, 1), pad=((16, 0), (20, 10))), sg.Button('Close', size=(5, 1), pad=((9, 0), (20, 10)))]]
 
-
-    window1 = sg.Window('Recipes project', layout1, size=(220, 340))
+    window = sg.Window('Recipes project', layout, size=(220, 270))
 
     while True:
-        event1, values1 = window1.read()
+        event, values = window.read()
 
-        if event1 == sg.WIN_CLOSED or event1 == 'Close':
+        if event == sg.WIN_CLOSED or event == 'Close':
             break
 
-        if event1 == 'Help':
+        if event == 'Help':
             help_window()            
 
-        if event1 == 'Add new recipe':
-            add_recipe_window()
+        if event == 'My recipes':
+            my_recipes_window()
 
-        if event1 == 'Create shopping list':
-            make_shopping_list_window ()
+        if event == 'My shopping lists':
+            my_shopping_lists_window()
         
-    window1.close()
+    window.close()
+
 
 # START
 
