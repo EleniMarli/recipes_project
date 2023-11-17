@@ -4,11 +4,9 @@ import subprocess
 from main.recipe_module import Recipe
 from main.shopping_list_module import Shopping_list
 from main.paths_config import recipes_full_path, result_full_path, readme_full_path, permanent_result_folder_full_path
-from main.txt_files_config import remove_txt_from_filenames, add_front_dot_to_filenames
+from main.txt_files_config import add_front_dot_to_filenames
 
-
-
-def choose_files (all_filenames_as_list_of_str_local):
+def choose_files (all_recipe_names_as_list_of_str):
  
     while True:
 
@@ -17,9 +15,9 @@ def choose_files (all_filenames_as_list_of_str_local):
 
             dictionary = {}
             counter = 1
-            for file_name in all_filenames_as_list_of_str_local:
-                dictionary[counter] = file_name
-                print(f'{counter} :' + f' {file_name.replace(".txt","")}' )
+            for recipe_name in all_recipe_names_as_list_of_str:
+                dictionary[counter] = recipe_name
+                print(f'{counter} :' + f' {recipe_name}')
                 counter += 1
 
             print("\nPlease choose the recipes to be considered by typing the corresponding digit. Separate the digits using one space." )
@@ -48,44 +46,37 @@ def choose_files (all_filenames_as_list_of_str_local):
             break
 
     print("\nThe selected recipes are the following:")
-    remove_txt_from_filenames(called_filenames_list_local)
-    print(*add_front_dot_to_filenames(remove_txt_from_filenames(called_filenames_list_local)), sep='\n')
+    print(*add_front_dot_to_filenames(called_filenames_list_local), sep='\n')
 
     return called_filenames_list_local
 
 
+def from_recipe_names_to_shopping_list_object (called_recipe_names_list, result_path):
+    recipe_objects_list = []
+    for recipe_name in called_recipe_names_list:
+        recipe_objects_list += [Recipe.retrieve_from_database(recipe_name)]
 
-def from_filenames_to_temporary_shopping_list (called_filenames_list_local, recipes_path_local, result_path_local):
-    recipe_objects_list = [] # I will end up with a list of all the Recipe objects
-    for file_name in called_filenames_list_local:
-        recipe_objects_list += [Recipe.from_file(recipes_path_local, file_name)]
-
-    shopping_list = Shopping_list.from_list_of_recipes(recipe_objects_list)
-
-    shopping_list.combine_repetitions()
-
-    shopping_list.export_to_temporary_text_file(result_path_local)
-
-    print("\nApplication has run successfully, the shopping list can be found in the ./main/text/result directory")
+    shopping_list = Shopping_list.from_list_of_recipes(recipe_objects_list).combine_repetitions()
+    # HERE I AM NOT CREATING A SHOPPING LIST OBJECT, NEITHER A TEMPORARY TXT FILE, JUST PRINTING SHOPPING LIST IN TERMINAL
+    shopping_list.print_object()
+    print("\nApplication has run successfully.")
 
     return shopping_list
 
 
+def execute_app ():
 
-def execute_app():
-
-    all_filenames_as_list_of_str = os.listdir(recipes_full_path) # list of str: list of all files names in the folder
-
+    all_recipe_names_as_list_of_str = Recipe.get_all_recipe_names_from_db()
     flag = True
 
     while flag == True:
-        called_filenames_list = choose_files(all_filenames_as_list_of_str)
+        called_recipe_names_list = choose_files(all_recipe_names_as_list_of_str)
 
         print("\nAre you sure? (yes/no/help)")
 
         user_input1 = input()   #1
         if user_input1 == 'yes':
-            list_for_use = from_filenames_to_temporary_shopping_list (called_filenames_list, recipes_full_path, result_full_path)
+            shopping_list_object = from_recipe_names_to_shopping_list_object (called_recipe_names_list, result_full_path)
 
             while True:
                 print ('\nIf you run the application again, your current shopping list will be overwritten. Do you want to save it? (yes/no)')
@@ -94,13 +85,19 @@ def execute_app():
 
                 if user_input2 == 'yes':
                     while True:
-                        print('\nHow do you want to name this shopping list?')
-                        filename = input()  #3
-                        current_permanent_shopping_list_full_path = os.path.join(permanent_result_folder_full_path, filename + '.txt')
-                        if os.path.exists(current_permanent_shopping_list_full_path) == True:
-                            print(f'File with name {filename} already exists. Try an other name.')
+                        print('\nHow do you want to name it?')
+                        shopping_list_name = input()  #3
+                        # HERE FOR NOW I KEPT THE TXT FILES (ONLY FOR PERMANENT SHOPPING LIST)
+                        current_permanent_shopping_list_full_path = os.path.join(permanent_result_folder_full_path, shopping_list_name + '.txt')
+
+                        if os.path.exists(current_permanent_shopping_list_full_path) == True or Shopping_list.check_database_for(shopping_list_name) != []:
+                            print(f'File with name {shopping_list_name} already exists. Try an other name.')
                         else:
-                            list_for_use.export_to_permanent_text_file(permanent_result_folder_full_path, filename)
+                            shopping_list_object.export_to_permanent_txt_file(permanent_result_folder_full_path, shopping_list_name)
+                            
+                            shopping_list_object = Shopping_list(shopping_list_name, shopping_list_object.list_of_all_ingredients)
+                            shopping_list_object.insert_to_database()
+
                             print('\nYour saved shopping list can be found in ./main/text/result/permanent directory')
                             flag = False
                             break

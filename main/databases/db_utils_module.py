@@ -19,6 +19,7 @@ class DB_utils:  # utility class
     def access_shopping_lists_database_and_return_con_n_cur ():
         return __class__.__access_database_and_return_con_n_cur(shopping_lists_database_path)
 
+
     @staticmethod
     def __retrieve_from_database (db_path, sql_query) -> list:
         con, cur = __class__.__access_database_and_return_con_n_cur(db_path)
@@ -35,6 +36,7 @@ class DB_utils:  # utility class
     def retrieve_from_shopping_lists_database (sql_query) -> list:
         return __class__.__retrieve_from_database(shopping_lists_database_path, sql_query)
 
+
     @staticmethod
     def __insert_to_database (db_path, sql_query):
         con, cur = __class__.__access_database_and_return_con_n_cur(db_path)
@@ -48,4 +50,36 @@ class DB_utils:  # utility class
 
     @staticmethod
     def insert_to_shopping_lists_database (sql_query) -> list:
-        __class__.__insert_to_database(shopping_lists_database_path, sql_query)  
+        __class__.__insert_to_database(shopping_lists_database_path, sql_query)
+
+
+    @staticmethod
+    def __delete_from_database (db_path, sql_query):
+        con, cur = __class__.__access_database_and_return_con_n_cur(db_path)
+        cur.execute(sql_query)
+        con.commit()
+        con.close()
+
+    @staticmethod
+    def delete_from_recipes_database (sql_query) -> list:
+        __class__.__delete_from_database(recipes_database_path, sql_query)
+
+    @staticmethod
+    def delete_from_shopping_lists_database (sql_query) -> list:
+        __class__.__delete_from_database(shopping_lists_database_path, sql_query)
+
+
+    @staticmethod
+    def __update_database (db_path, sql_query):
+        con, cur = __class__.__access_database_and_return_con_n_cur(db_path)
+        cur.execute(sql_query)
+        con.commit()
+        con.close()
+
+    @staticmethod
+    def update_recipes_database(sql_query):
+        __class__.__update_database (recipes_database_path, sql_query)
+
+    @staticmethod
+    def update_shopping_lists_database(sql_query):
+        __class__.__update_database (shopping_lists_database_path, sql_query)

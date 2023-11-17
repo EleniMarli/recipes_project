@@ -59,26 +59,56 @@ class Shopping_list:
         return '\n'.join(list1)
 
 
-    def export_to_temporary_text_file (self, result_path_local):
-        shop_list = open(os.path.join(result_path_local, 'temporary', "myshoppinglist.txt"), "w") # "w" command creates a new file, but unlike the "x", it overwrites any existing file found with the same file name.
+    # def export_to_temporary_txt_file (self, result_path_local):
+    #     shop_list = open(os.path.join(result_path_local, 'temporary', "myshoppinglist.txt"), "w") # "w" command creates a new file, but unlike the "x", it overwrites any existing file found with the same file name.
+    #     shop_list.write("Your shopping list:\n")
+    #     shop_list.write(self.get_ingredients_as_str())
+
+    # HERE FOR NOW I KEPT THE TXT FILES (PERMANENT SHOPPING LIST)
+    def export_to_permanent_txt_file (self, permanent_result_folder_full_path, filename_local):
+        shop_list = open(os.path.join(permanent_result_folder_full_path, filename_local + '.txt'), "x")
         shop_list.write("Your shopping list:\n")
-        shop_list.write(self.to_str())
+        shop_list.write(self.get_ingredients_as_str())
 
 
-    def save_in_database (self):
+    def insert_to_database (self):
         query = f"""
         INSERT INTO shopping_lists (name, str_with_all_ingredients) 
-        VALUES ('{self.name}', '{self.to_str()}')
+        VALUES ('{self.name}', '{self.get_ingredients_as_str()}')
         """
         DB_utils.insert_to_shopping_lists_database(query)
 
+    @staticmethod
+    def delete_from_database (shopping_list_name):
+        query = f"""
+        DELETE FROM shopping_lists 
+        WHERE name='{shopping_list_name}'
+        """
+        DB_utils.delete_from_shopping_lists_database(query)
 
-    def export_to_permanent_text_file (self, permanent_result_folder_full_path, filename_local):
-        shop_list = open(os.path.join(permanent_result_folder_full_path, filename_local + '.txt'), "x")
-        shop_list.write("Your shopping list:\n")
-        shop_list.write(self.to_str())
-
-
+    @staticmethod
+    def retrieve_from_database (shopping_list_name):
+        query = f"""
+        SELECT name, str_with_all_ingredients 
+        FROM shopping_lists 
+        WHERE name='{shopping_list_name}'
+        """
+        name, ingr = DB_utils.retrieve_from_shopping_lists_database(query)[0]  # ('Carbonara.txt', 'Cook this.', 4.0, 'egg(s), 3.0 unit(s)\nflour, 400.0 gr')
+        return Shopping_list (name, Shopping_list.create_list_of_ingredients(ingr.split('\n')))
+    
+    def check_database_for (shopping_list_name):
+        query = f"""
+        SELECT name 
+        FROM shopping_lists 
+        WHERE name='{shopping_list_name}'
+        """
+        result = DB_utils.retrieve_from_shopping_lists_database(query)
+        return result   # if it doesnt exist == [], else returns sth
+    
+    @staticmethod
+    def get_all_shopping_list_names_from_db ():
+        results = DB_utils.retrieve_from_shopping_lists_database("SELECT name FROM shopping_lists")
+        return [result[0] for result in results]
 
     def print_object (self):
         print(f"Shopping list consisting of following ingredients:")
