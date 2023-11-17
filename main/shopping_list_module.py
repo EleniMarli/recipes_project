@@ -1,5 +1,3 @@
-# A list of objects of the Ingredient class
-
 import os
 
 from main.ingredient_module import Ingredient
@@ -11,9 +9,10 @@ class Shopping_list:
         self.name = name_local
         self.list_of_all_ingredients = list_local
 
-    def __init__ (self, list_local : list):  # for 1 argument
-        self.name = ''
-        self.list_of_all_ingredients = list_local
+    @classmethod # considered the best solution
+    def without_name (cls, list_local : list):  # for 1 argument
+        return cls('None', list_local)
+    
 
 
     @staticmethod
@@ -26,9 +25,7 @@ class Shopping_list:
         for sublist in separated_list_of_ingr_objects_for_all_files:
             for item in sublist:
                 unified_list_of_ingr_objects_for_all_files.append(item)
-
-        return Shopping_list (unified_list_of_ingr_objects_for_all_files)
-
+        return Shopping_list.without_name (unified_list_of_ingr_objects_for_all_files)
 
     def combine_repetitions (self):
         names_list_pre_filter = list (map (lambda x : x.name , self.list_of_all_ingredients ))   # [eggs,flour,salt,eggs,flour]
