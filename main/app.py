@@ -7,8 +7,7 @@ import subprocess
 
 from main.paths_config import readme_full_path
 
-print ("Hi! Please read the README file for instructions on how to use this app.")
-print ("Do you want to execute the app? (yes/no/help)")
+print ("Do you want to execute the Recipes project app? (yes/no/help)")
 
 while True:
     user_input = input()

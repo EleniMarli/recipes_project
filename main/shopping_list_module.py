@@ -14,6 +14,13 @@ class Shopping_list:
         return cls('None', list_local)
     
 
+    @staticmethod
+    def create_list_of_ingredients (list_of_ingr_str): # argument = ['egg(s), 4 unit(s)', 'flour, 400 gr']
+        list_of_ingr_objects = []
+        for str_Ingr in list_of_ingr_str:
+            object_Ingr = Ingredient.from_str_to_ingredient(str_Ingr) # I make Ingredient objects here
+            list_of_ingr_objects += [object_Ingr]
+        return list_of_ingr_objects
 
     @staticmethod
     def from_list_of_recipes (list_of_recipes_local):
@@ -45,11 +52,10 @@ class Shopping_list:
             sl_without_repetitions += [object]
 
         self.list_of_all_ingredients = sl_without_repetitions
-
         return self
 
 
-    def to_str(self):
+    def get_ingredients_as_str(self):
         list1 = []
         for ingr in self.list_of_all_ingredients:
             list1 += [ingr.as_str()]
@@ -106,8 +112,9 @@ class Shopping_list:
     def get_all_shopping_list_names_from_db ():
         results = DB_utils.retrieve_from_shopping_lists_database("SELECT name FROM shopping_lists")
         return [result[0] for result in results]
+    
 
     def print_object (self):
-        print(f"Shopping list consisting of following ingredients:")
+        print(f"\nYour shopping list:")
         for ingr in self.list_of_all_ingredients:
             ingr.print_object()       

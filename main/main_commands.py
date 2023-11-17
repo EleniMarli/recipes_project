@@ -20,7 +20,7 @@ def choose_files (all_recipe_names_as_list_of_str):
                 print(f'{counter} :' + f' {recipe_name}')
                 counter += 1
 
-            print("\nPlease choose the recipes to be considered by typing the corresponding digit. Separate the digits using one space." )
+            print("\nChoose the recipes by typing the corresponding digit. Separate the digits using one space." )
 
             user_input_local = input()
 
@@ -79,7 +79,7 @@ def execute_app ():
             shopping_list_object = from_recipe_names_to_shopping_list_object (called_recipe_names_list, result_full_path)
 
             while True:
-                print ('\nIf you run the application again, your current shopping list will be overwritten. Do you want to save it? (yes/no)')
+                print ('\nDo you want to save your current shopping list? (yes/no)')
 
                 user_input2 = input()  #2
 
@@ -103,7 +103,6 @@ def execute_app ():
                             break
                     break
                         
-                
                 elif user_input2 == 'no':
                     flag = False
                     break
@@ -111,15 +110,12 @@ def execute_app ():
                 else:
                     print(f"The command {user_input2} is not valid. Try again.")
 
-
         elif user_input1 == 'no':
             flag = True
-
 
         elif user_input1 == 'help':
             subprocess.run(['notepad.exe', readme_full_path], check=True)
             print('\nHopefully that was helpful.')
-
 
         else:
             print (f"The command {user_input1} is not valid. Try again.")
