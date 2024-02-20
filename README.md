@@ -1,4 +1,4 @@
-# A way to create your shopping list
+# A way to create customisable shopping lists for your favourite recipes with a simple UI
 ## How does it work?
 
 ## Execute using the graphical user interface (currently recommended)
